@@ -1,0 +1,8 @@
+.container {
+  width: 100%;
+  overflow-x: auto; /* Scroll horizontal si trop large */
+}
+
+.daypilot-calendar {
+  min-width: 1000px; /* Forcer le scroll si conteneur plus petit */
+}
