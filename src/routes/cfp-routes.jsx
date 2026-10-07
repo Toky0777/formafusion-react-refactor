@@ -29,6 +29,7 @@ import LayoutSkill from "../layouts/layout-skill";
 import { CaLayout } from "../layouts/cfp/ca-layout";
 import FmfpLayout from "../layouts/cfp/fmfp-layout";
 import DocumentLayouts from "../layouts/cfp/layouts-documents";
+import { SPACES } from "../config/roles";
 import lazyPage from "./lazyPage";
 
 // Pages chargées à la demande (code splitting)
@@ -273,7 +274,7 @@ const INVOICE_TYPES = {
 const cfpRoutes = {
   path: "/cfp",
   element: (
-    <ProtectedRoute allowedUserTypes={["superAdminCfp", "adminCfp"]}>
+    <ProtectedRoute allowedUserTypes={SPACES.cfp.userTypes}>
       <CfpLayout />
     </ProtectedRoute>
   ),

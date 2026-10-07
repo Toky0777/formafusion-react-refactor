@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import { getPostLoginPath, resolveSpace } from "../config/roles";
 import Button from "../components/ui/button2";
 import Input from "../components/ui/input2";
 import Alert from "../components/ui/alert2";
 
 const Login = () => {
-  const { login, isLoading, error, clearError } = useAuth();
+  const { login, logout, isLoading, error, clearError } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -58,24 +59,27 @@ const Login = () => {
     try {
       const result = await login(formData);
 
-      if (!result?.user_type) {
+      // Échec déjà signalé par AuthContext (identifiants incorrects, etc.)
+      if (!result?.success) return;
+
+      const identity = { userType: result.user_type, roleId: result.role_id };
+
+      // Compte sans espace dédié dans l'application (ex. formateur interne)
+      if (!resolveSpace(identity)) {
+        await logout();
         setFormErrors({
-          general: "Type d'utilisateur manquant dans la réponse.",
+          general:
+            "Votre type de compte n'a pas d'espace disponible dans cette application.",
         });
         return;
       }
 
-      const ROUTE_BY_ROLE = {
-        cfp: "/cfp",
-        etp_grouped: "/etp",
-        etp_single: "/etp",
-        formateur: "/formateur",
-        particulier: "/particulier",
-      };
-
-      const defaultRoute = ROUTE_BY_ROLE[result.user_type] || "/";
-      const fromRoute = location?.state?.from;
-      navigate(fromRoute || defaultRoute, { replace: true });
+      // Page demandée avant la connexion, uniquement si elle appartient à
+      // l'espace de cet utilisateur ; sinon son tableau de bord.
+      navigate(
+        getPostLoginPath({ ...identity, from: location?.state?.from }),
+        { replace: true }
+      );
     } catch (error) {
       console.error("Erreur lors du login:", error);
       setFormErrors({

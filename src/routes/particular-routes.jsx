@@ -11,6 +11,8 @@ import SkillApprenantContent from "../contents/skill-apprenant";
 import { Navigate } from "react-router-dom";
 import { ModuleProvider } from "../contexts/ModuleContext";
 import RefreshLayoutApprenant from "../layouts/apprenants/refresh-layout-apprenant";
+import ProtectedRoute from "../components/Common/ProtectedRoute";
+import { SPACES } from "../config/roles";
 import lazyPage from "./lazyPage";
 
 // Pages chargées à la demande (code splitting)
@@ -79,7 +81,11 @@ const ProjectFenced = lazyPage(() =>
 
 const particularRoutes = {
   path: "/particulier",
-  element: <ParticularLayout />,
+  element: (
+    <ProtectedRoute allowedUserTypes={SPACES.particulier.userTypes}>
+      <ParticularLayout />
+    </ProtectedRoute>
+  ),
   children: [
     {
       index: true,

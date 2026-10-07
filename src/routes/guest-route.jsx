@@ -1,8 +1,9 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { getPostLoginPath, resolveSpace } from "../config/roles";
 
 const GuestRoute = ({ children }) => {
-  const { token, userType, isLoading } = useAuth();
+  const { token, user, userType, roleId, isLoading } = useAuth();
   const location = useLocation();
 
   // Loader pendant le fetch /user
@@ -14,19 +15,16 @@ const GuestRoute = ({ children }) => {
     );
   }
 
-  // Si l’utilisateur est déjà connecté et tente d’accéder à login/register
-  if (token && userType) {
-    const routes = {
-      superAdminCfp: "/cfp",
-      adminCfp: "/cfp",
-      superAdminEtp: "/etp",
-      adminEtp: "/etp",
-      formateur: "/formateur",
-      particulier: "/particulier",
-    };
-
-    const defaultRoute = routes[userType] || "/";
-    return <Navigate to={location.state?.from || defaultRoute} replace />;
+  // Déjà connecté et tente d'accéder à login/register : on l'envoie dans SON
+  // espace (jamais celui d'un autre rôle). Sans espace dédié, on laisse la
+  // page s'afficher pour qu'il puisse se connecter avec un autre compte.
+  if (token && user && resolveSpace({ userType, roleId })) {
+    const target = getPostLoginPath({
+      userType,
+      roleId,
+      from: location.state?.from,
+    });
+    return <Navigate to={target} replace />;
   }
 
   return children;

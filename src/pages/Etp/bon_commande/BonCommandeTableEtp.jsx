@@ -243,7 +243,7 @@ const EtpPopoverCell = React.memo(
       setIsLoading(true);
       setShowDrawer(true);
       try {
-        const res = await axios.get(`/cfp/etp-drawer/${idEtp}`);
+        const res = await axios.get(`/etp/etp-drawer/${idEtp}`);
         setDataEtp(res.data);
       } catch (error) {
         console.log(error);

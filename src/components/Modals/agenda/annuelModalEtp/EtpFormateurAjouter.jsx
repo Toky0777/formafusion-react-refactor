@@ -52,7 +52,7 @@ const EtpFormateurAjouter = ({ idProjet,setShowEditDrawer }) => {
         try {
             const response = await axios({
                 method: type,
-                url: `/cfp/projets/${idProjet}/${idFormateur}/form/assign`,
+                url: `/etp/projets/${idProjet}/${idFormateur}/form/assign`,
             });
             const res = response.data;
            

@@ -33,3 +33,15 @@ Règle appliquée : une fusion n'est faite que si le texte est identique après 
 - ~730 avertissements `no-unused-vars` (variables locales) et ~226 `react-hooks/exhaustive-deps` : à traiter à la main.
 - Fichiers au nom douteux (`ExportButtons .jsx`, `folder-formateur..jsx`, `Company..jsx`, dossiers avec accents/espaces).
 - `.env` : non inclus dans cette archive (contient une clé API) ; voir `.env.example`.
+
+## Rôles, redirections et navigation (itération 2)
+
+- `src/config/roles.js` : correspondance `role_id` / `user_type` du back ↔ espaces front (`/cfp`, `/etp`, `/formateur`, `/particulier`). Utilisé par la connexion, les gardes et les boutons « tableau de bord ».
+- Connexion : redirection vers l'espace du rôle ; la page demandée avant connexion n'est reprise que si elle appartient à cet espace.
+- `/formateur` et `/particulier` sont désormais protégés (`ProtectedRoute`).
+- `NotFound` / `UnauthorizedAccess` : le bouton « Aller au tableau de bord » mène à l'espace de l'utilisateur (hook `useHomeLink`) ; il pointait vers `/app/dashboard` (inexistant).
+- `AuthContext` : `roleId` conservé ; un token expiré ne bloque plus sur un loader infini.
+- Menus : liens cassés corrigés ; entrées sans route front **et** sans route back retirées (Etp : LMS, Factures, Évaluation Froid ; Particulier : Lieu & Salle ; top-menus Formateur/Particulier).
+- Arbre `/formateur` : routes d'apprenant imbriquées par erreur sous `/formateur/agenda` supprimées.
+- Fix : `ProjectCard is not defined` (régression de la factorisation de `ProjectListBase`).
+- `AUDIT_API.md` : appels du front sans route back compatible pour le rôle (analyse statique, non exécutée).

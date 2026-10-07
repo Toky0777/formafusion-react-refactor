@@ -6,15 +6,19 @@ import {
   Youtube,
 } from "lucide-react";
 
-export function TopMenu() {
+const CFP_MENU_ITEMS = [
+  { name: "Centre", href: "/cfp/centre" },
+  { name: "Annuaire", href: "/cfp/annuaire" },
+  { name: "Catalogue", href: "/cfp/cours" },
+];
+
+/**
+ * @param {Array<{name:string,href:string}>} menuItems liens de navigation de l'espace
+ *        (par défaut : ceux de l'espace Cfp).
+ */
+export function TopMenu({ menuItems = CFP_MENU_ITEMS }) {
   const location = useLocation();
   const pathname = location.pathname;
-
-  const menuItems = [
-    { name: "Centre", href: "/cfp/centre" },
-    { name: "Annuaire", href: "/cfp/annuaire" },
-    { name: "Catalogue", href: "/cfp/cours" },
-  ];
 
   const quickActions = [
     { name: "Aides", href: "#", icon: CircleQuestionMark },

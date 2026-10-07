@@ -9,11 +9,13 @@ const LoadingScreen = () => (
 );
 
 const ProtectedRoute = ({ children, allowedUserTypes = [] }) => {
-  const { userType, isLoading, token, isLoggingOut } = useAuth();
+  const { user, userType, isLoading, token, isLoggingOut } = useAuth();
   const location = useLocation();
 
-  // 1. Chargement global
-  if (isLoading || isLoggingOut || (token && userType === null)) {
+  // 1. Chargement global (token présent mais utilisateur pas encore chargé).
+  //    NB : on ne teste plus `userType === null` : le back renvoie null pour
+  //    certains rôles, ce qui bloquait le loader indéfiniment.
+  if (isLoading || isLoggingOut || (token && !user)) {
     return <LoadingScreen />;
   }
 
@@ -34,7 +36,7 @@ const ProtectedRoute = ({ children, allowedUserTypes = [] }) => {
   if (!isAllowed) {
     return (
       <UnauthorizedAccess
-        requiredUserType={allowedUserTypes.join(" ou ")}
+        allowedUserTypes={allowedUserTypes}
         currentPath={location.pathname}
       />
     );

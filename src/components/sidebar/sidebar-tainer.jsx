@@ -70,7 +70,7 @@ export function NavigationSidebarTrainer() {
     {
       title: "Gestion des Utilisateurs",
       color: "text-blue-600",
-      modules: [{ name: "Apprenants", icon: Users, href: "apprenant" }],
+      modules: [{ name: "Apprenants", icon: Users, href: "/formateur/apprenant" }],
     },
     {
       title: "Formation & Contenu",
@@ -362,7 +362,7 @@ export function NavigationSidebarTrainer() {
 
       {/* Settings */}
       <div className="p-3 border-t border-gray-200">
-        <Link href="/settings">
+        <Link to="/formateur/profile">
           <Button
             variant="ghost"
             className={`w-full justify-start hover:bg-gray-100 text-gray-700 hover:text-gray-900 ${isCollapsed ? "px-3" : "px-3"

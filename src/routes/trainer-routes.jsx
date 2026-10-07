@@ -20,6 +20,8 @@ import { TrainerAttendanceContent } from "../contents/TrainerAttendanceContent";
 import { ModuleProvider } from "../contexts/ModuleContext";
 import RefreshLayoutFormateur from "../layouts/formateurs/refresh-layout-formateur";
 import LearnerLayoutFormateur from "../layouts/formateurs/learner-layout-formateur";
+import ProtectedRoute from "../components/Common/ProtectedRoute";
+import { SPACES } from "../config/roles";
 import lazyPage from "./lazyPage";
 
 // Pages chargées à la demande (code splitting)
@@ -28,19 +30,6 @@ const SemaineCalendarFormateur = lazyPage(() => import("../pages/Formateur/agend
 const ProjectFormList = lazyPage(() => import("../pages/Formateur/evaluation/ProjectFormList"));
 const ProjectFormDetails = lazyPage(() => import("../pages/Formateur/evaluation/ProjectFormDetails"));
 const LeanerListFormateur = lazyPage(() => import("../pages/Formateur/learner"));
-const Attendance = lazyPage(() =>
-  import("../pages/Cfp/attendance").then((m) => ({ default: m.Attendance }))
-);
-const Accueil = lazyPage(() => import("../pages/Apprenants/Support/Accueil"));
-const CentreList = lazyPage(() => import("../pages/Apprenants/Support/Centre/CentreList"));
-const ProgramList = lazyPage(() => import("../pages/Apprenants/Support/Programme/ProgramList"));
-const CentreDetail = lazyPage(() => import("../pages/Apprenants/Support/Centre/CentreDetail"));
-const ProgramDetail = lazyPage(() => import("../pages/Apprenants/Support/Programme/ProgramDetail"));
-const GamificationPage = lazyPage(() => import("../pages/Apprenants/Gamification/gamification-page"));
-const PageProjets = lazyPage(() => import("../pages/Apprenants/Projet/projet"));
-const Refresh = lazyPage(() => import("../pages/Apprenants/Refresh/Refresh"));
-const SemaineCalendarApprenant = lazyPage(() => import("../pages/Apprenants/agenda/semaines/SemaineCalendarApprenant"));
-const AnnuelCalendarApprenant = lazyPage(() => import("../pages/Apprenants/agenda/annuels/AnnuelCalendarApprenant"));
 const HomePageForm = lazyPage(() => import("../pages/Formateur/home"));
 const ProjectTrainer = lazyPage(() => import("../pages/Formateur/projet/index"));
 const ProjectTrainerDetail = lazyPage(() => import("../pages/Formateur/projet/detail"));
@@ -107,7 +96,11 @@ const EmargementTrainer = lazyPage(() => import("../pages/Formateur/attendance/e
 
 const trainerRoutes = {
   path: "/formateur",
-  element: <TrainerLayout />,
+  element: (
+    <ProtectedRoute allowedUserTypes={SPACES.formateur.userTypes}>
+      <TrainerLayout />
+    </ProtectedRoute>
+  ),
   children: [
     {
       index: true,
@@ -153,42 +146,6 @@ const trainerRoutes = {
             },
           ],
         },
-        {
-          // path: "presence",
-          element: <HomeContentAttendance />,
-          children: [
-            {
-              index: true,
-              element: <Attendance />,
-            },
-          ],
-        },
-        {
-          path: "support",
-          element: <SupportContent />,
-          children: [
-            {
-              index: true,
-              element: <Accueil />,
-            },
-            {
-              path: "centre",
-              element: <CentreList />,
-            },
-            {
-              path: "centre/:id",
-              element: <CentreDetail />,
-            },
-            {
-              path: "programmes",
-              element: <ProgramList />,
-            },
-            {
-              path: "programmes/:id",
-              element: <ProgramDetail />,
-            },
-          ],
-        },
         // {
         //   path: "photo",
         //   element: <PhotoContent />,
@@ -208,42 +165,7 @@ const trainerRoutes = {
         //   ],
         // },
 
-        {
-          path: "gamification",
-          element: <GamificationPage />,
-        },
         //projet
-        {
-          path: "projet",
-          element: <PageProjets />,
-        },
-        {
-          path: "refreshd",
-          element: <Refresh />,
-        },
-        {
-          path: "agenda",
-          element: <AuthCalendarProvider />,
-          children: [
-            {
-              element: <LayoutCalendarApprenant />,
-              children: [
-                {
-                  index: true,
-                  element: <AnnuelCalendarApprenant />,
-                },
-                {
-                  path: "annuel",
-                  element: <AnnuelCalendarApprenant />,
-                },
-                {
-                  path: "semaine",
-                  element: <SemaineCalendarApprenant />,
-                },
-              ],
-            },
-          ],
-        },
       ],
     },
 

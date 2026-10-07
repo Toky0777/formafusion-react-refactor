@@ -1,8 +1,10 @@
 import { AlertTriangle, Home, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import useHomeLink from '../../hooks/useHomeLink';
 
 const NotFound = () => {
     const navigate = useNavigate();
+    const home = useHomeLink();
 
     return (
         <div className="flex flex-col justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
@@ -60,11 +62,11 @@ const NotFound = () => {
                             </button>
 
                             <Link
-                                to="/app/dashboard"
+                                to={home.to}
                                 className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition-colors bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                             >
                                 <Home className="w-4 h-4 mr-2" />
-                                Aller au tableau de bord
+                                {home.label}
                             </Link>
                         </div>
 

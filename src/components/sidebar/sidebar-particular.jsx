@@ -13,7 +13,6 @@ import {
   FolderOpen,
   Presentation,
   Gamepad2,
-  MapPin,
   Camera,
   ThermometerSun,
   ThermometerSnowflake,
@@ -114,7 +113,6 @@ export function NavigationSidebarParticular() {
       modules: [
         { name: "Présence", icon: UserCheck, href: "/particulier/presence" },
         { name: "Agenda", icon: Calendar, href: "/particulier/agenda" },
-        { name: "Lieu & Salle", icon: MapPin, href: "/locations" },
       ],
     },
     {
@@ -126,7 +124,7 @@ export function NavigationSidebarParticular() {
       title: "Évaluation & Analytics",
       color: "text-pink-600",
       modules: [
-        { name: "Tableau de bord", icon: BarChart3, href: "/analytics" },
+        { name: "Tableau de bord", icon: BarChart3, href: "/particulier" },
         {
           name: "Évaluation Chaud",
           icon: ThermometerSun,
@@ -347,7 +345,7 @@ export function NavigationSidebarParticular() {
 
       {/* Settings */}
       <div className="p-3 border-t border-gray-200">
-        <Link href="/settings">
+        <Link to="/particulier/profile">
           <Button
             variant="ghost"
             className={`w-full justify-start hover:bg-gray-100 text-gray-700 hover:text-gray-900 ${

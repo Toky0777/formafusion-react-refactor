@@ -16,6 +16,7 @@ import CustomerContent from "../contents/customer-content";
 import { SearchProviderProject } from "../contexts/cfp/SearchContextProject";
 import ReservationLayout from "../layouts/cfp/reservation-layout";
 import FmfpEtpLayout from "../layouts/etp/fmfp-etp-layout";
+import { SPACES } from "../config/roles";
 import lazyPage from "./lazyPage";
 
 // Pages chargées à la demande (code splitting)
@@ -90,7 +91,7 @@ const ListeBonCommandeEtp = lazyPage(() =>
 const etpRoutes = {
   path: "/etp",
   element: (
-    <ProtectedRoute allowedUserTypes={["superAdminEtp", "adminEtp"]}>
+    <ProtectedRoute allowedUserTypes={SPACES.etp.userTypes}>
       <EtpLayout />
     </ProtectedRoute>
   ),

@@ -2,10 +2,13 @@ import { createContext, useContext, useState, useEffect, useRef } from "react";
 import axios from "../config/axios";
 import Axios from "axios";
 import { API_ORIGIN } from "../config/env";
+import { getHomePath } from "../config/roles";
 
 const AuthContext = createContext({
   user: null,
   userType: null,
+  roleId: null,
+  homePath: "/",
   token: null,
   symbol: null,
   customerName: null,
@@ -22,6 +25,11 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userType, setUserType] = useState(null);
+  // role_id (table `roles` du back) : plus fiable que user_type, ambigu côté back
+  const [roleId, setRoleId] = useState(() => {
+    const saved = localStorage.getItem("rle_d");
+    return saved ? Number(saved) : null;
+  });
   const [customerName, setCustomerName] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [isLoading, setIsLoading] = useState(true);
@@ -52,6 +60,10 @@ export const AuthProvider = ({ children }) => {
       });
       setUser(response.data.user);
       setUserType(response.data.user_type);
+      if (response.data.roleId != null) {
+        setRoleId(Number(response.data.roleId));
+        localStorage.setItem("rle_d", response.data.roleId);
+      }
       setSymbol(response.data.symbol);
       setCustomerName(response.data.customer_name);
       setEtpType(response.data.etp_type);
@@ -59,9 +71,14 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.setItem("setting", JSON.stringify(response.data.setting));
     } catch (err) {
       console.error("Erreur récupération user :", err);
+      // Token invalide/expiré : on réinitialise TOUT l'état d'auth, sinon
+      // `token` reste défini et ProtectedRoute affiche le loader indéfiniment.
       localStorage.removeItem("token");
+      localStorage.removeItem("rle_d");
+      setToken("");
       setUser(null);
       setUserType(null);
+      setRoleId(null);
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +99,7 @@ export const AuthProvider = ({ children }) => {
         setToken(response.data.token);
         setUser(response.data.user);
         setUserType(response.data.user_type);
+        setRoleId(Number(response.data.role_id));
         setSymbol(response.data.symbol);
         setCustomerName(response.data.customer_name);
         setEtpType(response.data.etp_type);
@@ -130,9 +148,11 @@ export const AuthProvider = ({ children }) => {
     } finally {
       // Nettoyage du contexte et stockage
       localStorage.removeItem("token");
+      localStorage.removeItem("rle_d");
       sessionStorage.clear();
       setUser(null);
       setUserType(null);
+      setRoleId(null);
       setToken("");
       setIsLoading(false);
       setIsLoggingOut(false);
@@ -146,6 +166,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         userType,
+        roleId,
+        homePath: getHomePath({ userType, roleId }),
         token,
         symbol,
         customerName,

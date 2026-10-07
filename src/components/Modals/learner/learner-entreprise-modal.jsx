@@ -21,7 +21,7 @@ function LearnerEntrepriseModal({ isOpen, onClose }) {
 
     useEffect(() => {
         if (isOpen && content?.idEtp) {
-            axios.get(`/cfp/etp-drawer/${content.idEtp}`)
+            axios.get(`/etp/etp-drawer/${content.idEtp}`)
                 .then((response) => {
                     setEntreprise(response.data.customer);
                     setReferents(response.data.referents);

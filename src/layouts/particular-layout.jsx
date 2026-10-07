@@ -12,7 +12,7 @@ export default function ParticularLayout() {
         <NavigationSidebarParticular />
         <div className="flex-1 overflow-auto bg-gray-50">
           <GlobalHeaderParticular />
-          <TopMenu />
+          <TopMenu menuItems={[]} />
           <BreadcrumbBarParticular />
           <div>
             <Outlet />

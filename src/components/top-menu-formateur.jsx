@@ -5,14 +5,12 @@ export function TopMenuFormateur() {
   const location = useLocation()
   const pathname = location.pathname
 
-  const menuItems = [
-    { name: "Centre", href: "/formateur/centre" },
-    { name: "Annuaire", href: "/formateur/annuaire" },
-  ]
+  // Pas de pages « Centre » / « Annuaire » dans l'espace formateur
+  const menuItems = []
 
   const quickActions = [
     { name: "Agenda", href: "/formateur/agenda", icon: Calendar },
-    { name: "Projet", href: "/formateur/projet", icon: Briefcase },
+    { name: "Projet", href: "/formateur/projects", icon: Briefcase },
   ]
 
   return (

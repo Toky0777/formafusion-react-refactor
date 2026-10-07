@@ -20,7 +20,7 @@ function EntrepriseModal({ isOpen, onClose }) {
 
     useEffect(() => {
         if (isOpen) {
-            axios.get(`/cfp/etp-drawers/apprenant/${content.idEmploye}`)
+            axios.get(`/etp/etp-drawers/apprenant/${content.idEmploye}`)
                 .then((response) => {
                     // console.log(response.data);
                     setUser(response.data.user);

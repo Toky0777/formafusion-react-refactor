@@ -43,6 +43,7 @@ const ProjectListBase = ({
         groupesTries.map(([mois, projetsDuMois]) => (
           <ProjectMonthSection
             key={mois}
+            ProjectCard={ProjectCard}
             mois={mois}
             projetsDuMois={projetsDuMois}
             searchTerm={searchTerm}
@@ -69,6 +70,7 @@ const EmptyState = ({isFiltered}) => (
 );
 
 const ProjectMonthSection = ({
+  ProjectCard,
   mois,
   projetsDuMois,
   searchTerm,

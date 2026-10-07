@@ -272,7 +272,7 @@ const ProjetDetailEtp = () => {
     if (method === "post") {
         try {
             const response = await axios.post(
-                `${API_URL}/cfp/projets/${id}/${idFrais}/${idEtp}/fraisprojet/assign`
+                `${API_URL}/etp/projets/${id}/${idFrais}/${idEtp}/fraisprojet/assign`
             );
 
             if (response.status != 200) {
@@ -320,7 +320,7 @@ const updateFrais = async (idFraisProjet, field, value, id) => {
         };
 
         await axios.post(
-            `/cfp/projets/update-frais`,
+            `/etp/projets/update-frais`,
             data,
         );
 
