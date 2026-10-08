@@ -2,7 +2,6 @@
   "name": "react_project_sidebar",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mg.formafusion.io/react",
   "dependencies": {
     "@daypilot/daypilot-lite-react": "^4.3.0",
     "@emotion/react": "^11.14.0",

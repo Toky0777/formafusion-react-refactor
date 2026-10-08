@@ -19,7 +19,6 @@ import { SessionDrawer } from "../../../components/drawer/project/sessionEtp-dra
 import { useProjectData } from "../../../hooks/useProjectEtpData";
 import { useProjectActions } from "../../../hooks/useProjectActions";
 import { FolderDrawer } from "../../../components/drawer/project/folder-drawer";
-import { AuthCalendarProvider } from "../../../contexts/AuthCalendarProvider";
 
 const Project = ({ status }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -364,11 +363,9 @@ const Project = ({ status }) => {
         {activeDrawer === "documents" && (
           <FolderDrawer data={drawerData} onClose={closeDrawer} />
         )}
-        <AuthCalendarProvider>
-          {activeDrawer === "heures" && (
-            <SessionDrawer data={drawerData} onClose={closeDrawer} />
-          )}
-        </AuthCalendarProvider>
+        {activeDrawer === "heures" && (
+          <SessionDrawer data={drawerData} onClose={closeDrawer} />
+        )}
       </AnimatePresence>
     </>
   );

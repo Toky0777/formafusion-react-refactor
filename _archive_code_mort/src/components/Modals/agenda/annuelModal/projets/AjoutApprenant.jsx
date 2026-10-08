@@ -123,12 +123,12 @@ const Ajoutemployed = ({ idProjet, setShowPageApprenant }) => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 300 }}
                 transition={{ duration: 0.5 }}
-                className="fixed right-0 top-0 h-full bg-white w-[1010px] z-50 shadow-lg"
+                className="fixed inset-y-0 right-0 z-50 flex w-full max-w-[1010px] flex-col overflow-hidden bg-white shadow-lg"
             >
-                <div className="w-full h-full p-4 overflow-y-auto">
-                    <div className="flex items-start h-full gap-4">
+                <div className="flex min-h-0 flex-1 flex-col p-4">
+                    <div className="flex min-h-0 flex-1 gap-4">
                         {/* Liste des employés disponibles */}
-                        <div className="w-1/2 pr-4 border-r">
+                        <div className="flex min-h-0 w-1/2 flex-col overflow-hidden border-r pr-4">
                             <div className="mb-2">
                                 <label className="text-sm font-semibold text-gray-700">Entreprise</label>
                                 <select
@@ -148,89 +148,93 @@ const Ajoutemployed = ({ idProjet, setShowPageApprenant }) => {
                                 placeholder="Rechercher un employé..."
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                            {loading ? (
-                                <p>Chargement...</p>
-                            ) : (
-                                <table className="w-full table-auto">
-                                    <tbody>
-                                        {filteredEmployes.length > 0 ? (
-                                            filteredEmployes.map((employed, index) => {
-                                                const isSelected = selectedApprenants.some(app => app.idEmploye === employed.idEmploye);
-                                                return (
-                                                    <tr key={index} className="border-b">
-                                                        <td className="flex items-center gap-2 py-2">
-                                                            <div className="flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
-                                                                {employed.emp_photo ? (
-                                                                    <img src={`https://formafusionmg.ams3.cdn.digitaloceanspaces.com/formafusionmg/img/employes/${employed.emp_photo}`} alt="" />
-                                                                ) : (
-                                                                    <span className="text-sm uppercase">{employed.emp_name?.charAt(0)}</span>
-                                                                )}
-                                                            </div>
-                                                            <div>
-                                                                <div className="text-sm font-semibold uppercase">{employed.emp_name}</div>
-                                                                <div className="text-xs text-gray-500">{employed.emp_firstname}</div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="text-right">
-                                                            <button
-                                                                onClick={() => manageApprenant("post", idProjet, employed.idEmploye)}
-                                                                className="btn btn-success btn-sm"
-                                                                disabled={isSelected}
-                                                            >
-                                                                <FaPlus />
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })
-                                        ) : (
-                                            <tr><td colSpan="2" className="text-center">Aucun employé trouvé</td></tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            )}
+                            <div className="min-h-0 flex-1 overflow-y-auto">
+                                {loading ? (
+                                    <p>Chargement...</p>
+                                ) : (
+                                    <table className="w-full table-auto">
+                                        <tbody>
+                                            {filteredEmployes.length > 0 ? (
+                                                filteredEmployes.map((employed, index) => {
+                                                    const isSelected = selectedApprenants.some(app => app.idEmploye === employed.idEmploye);
+                                                    return (
+                                                        <tr key={index} className="border-b">
+                                                            <td className="flex items-center gap-2 py-2">
+                                                                <div className="flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
+                                                                    {employed.emp_photo ? (
+                                                                        <img src={`https://formafusionmg.ams3.cdn.digitaloceanspaces.com/formafusionmg/img/employes/${employed.emp_photo}`} alt="" />
+                                                                    ) : (
+                                                                        <span className="text-sm uppercase">{employed.emp_name?.charAt(0)}</span>
+                                                                    )}
+                                                                </div>
+                                                                <div>
+                                                                    <div className="text-sm font-semibold uppercase">{employed.emp_name}</div>
+                                                                    <div className="text-xs text-gray-500">{employed.emp_firstname}</div>
+                                                                </div>
+                                                            </td>
+                                                            <td className="text-right">
+                                                                <button
+                                                                    onClick={() => manageApprenant("post", idProjet, employed.idEmploye)}
+                                                                    className="btn btn-success btn-sm"
+                                                                    disabled={isSelected}
+                                                                >
+                                                                    <FaPlus />
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })
+                                            ) : (
+                                                <tr><td colSpan="2" className="text-center">Aucun employé trouvé</td></tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                )}
+                            </div>
                         </div>
 
                         {/* Liste des employés sélectionnés */}
-                        <div className="w-1/2 pl-4">
-                            <h4 className="mb-2 text-sm font-semibold">{selectedApprenants.length} employés sélectionnés</h4>
-                            <table className="w-full table-auto">
-                                <tbody>
-                                    {selectedApprenants.length > 0 ? (
-                                        selectedApprenants.map((apprenant, index) => (
-                                            <tr key={index} className="border-b">
-                                                <td className="flex items-center gap-2 py-2">
-                                                    <div className="flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
-                                                        {apprenant.emp_photo ? (
-                                                            <img src={`https://formafusionmg.ams3.cdn.digitaloceanspaces.com/formafusionmg/img/employes/${apprenant.emp_photo}`} alt="" />
-                                                        ) : (
-                                                            <span className="text-sm uppercase">{apprenant.emp_name?.charAt(0)}</span>
-                                                        )}
-                                                    </div>
-                                                    <div>
-                                                        <div className="text-sm font-semibold uppercase">{apprenant.emp_name}</div>
-                                                        <div className="text-xs text-gray-500">{apprenant.emp_firstname}</div>
-                                                    </div>
-                                                </td>
-                                                <td className="text-right">
-                                                    <button
-                                                        onClick={() => manageApprenant("delete", idProjet, apprenant.idEmploye)}
-                                                        className="btn btn-danger btn-sm"
-                                                    >
+                        <div className="flex min-h-0 w-1/2 flex-col overflow-hidden pl-4">
+                            <h4 className="mb-2 shrink-0 text-sm font-semibold">{selectedApprenants.length} employés sélectionnés</h4>
+                            <div className="min-h-0 flex-1 overflow-y-auto">
+                                <table className="w-full table-auto">
+                                    <tbody>
+                                        {selectedApprenants.length > 0 ? (
+                                            selectedApprenants.map((apprenant, index) => (
+                                                <tr key={index} className="border-b">
+                                                    <td className="flex items-center gap-2 py-2">
+                                                        <div className="flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-200 rounded-full">
+                                                            {apprenant.emp_photo ? (
+                                                                <img src={`https://formafusionmg.ams3.cdn.digitaloceanspaces.com/formafusionmg/img/employes/${apprenant.emp_photo}`} alt="" />
+                                                            ) : (
+                                                                <span className="text-sm uppercase">{apprenant.emp_name?.charAt(0)}</span>
+                                                            )}
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-sm font-semibold uppercase">{apprenant.emp_name}</div>
+                                                            <div className="text-xs text-gray-500">{apprenant.emp_firstname}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        <button
+                                                            onClick={() => manageApprenant("delete", idProjet, apprenant.idEmploye)}
+                                                            className="btn btn-danger btn-sm"
+                                                        >
                                                         <FaXmark />
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr><td colSpan="2" className="text-center">Aucun employé sélectionné</td></tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr><td colSpan="2" className="text-center">Aucun employé sélectionné</td></tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex justify-end w-full mt-6">
+                    <div className="flex w-full shrink-0 justify-end border-t bg-white pt-4 mt-4">
                         <button onClick={() => setShowPageApprenant(false)} className="mr-2 btn btn-secondary">Annuler</button>
                         <button onClick={() => setShowPageApprenant(false)} className="btn btn-primary">Fermer</button>
                     </div>

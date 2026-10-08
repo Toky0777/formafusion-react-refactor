@@ -34,6 +34,7 @@ import {
     Code2,
     Globe,
     FileSpreadsheet,
+    Presentation,
     Factory,
     FolderKanban,
     Headphones,
