@@ -7,7 +7,6 @@ import {
   BookOpen,
   Users,
   Calendar,
-  BarChart3,
   FileText,
   UserCheck,
   GraduationCap,
@@ -15,10 +14,7 @@ import {
   Building2,
   FolderOpen,
   Camera,
-  TrendingUp,
-  ThermometerSun,
   Ticket,
-  SquareChevronUp,
   Gift,
   Signature,
   House,
@@ -36,7 +32,6 @@ import {
   ChevronUp,
   ChevronRight,
   MessageSquareMore,
-  X,
 } from "lucide-react";
 import axios from "../../config/axios";
 import { FaYoutube } from "react-icons/fa6";
@@ -80,75 +75,6 @@ export function NavigationSidebarEtp() {
   // const totalCustomer = counts.customers + counts.particulars;
 
   const moduleCategories = [
-    {
-      title: "Marketplace",
-      color: "text-cyan-600",
-      modules: [
-        { name: "Catalogue en ligne", icon: BookOpen, href: "/etp/cours" },
-        { name: "Centre de formation", icon: Building2, href: "/etp/centre" },
-        { name: "Annuaire", icon: Notebook, href: "/etp/annuaire" },
-        { name: "Réservations", icon: Ticket, href: "/etp/reservation" },
-        {
-          name: "Loyalty and rewards",
-          icon: Gift,
-          href: "/etp/loyalty_rewards",
-          count: counts.rewards,
-        },
-      ],
-    },
-    {
-      title: "Business Intelligence",
-      color: "text-red-600",
-      modules: [
-        { name: "Analytics", icon: BarChart3, href: "/etp/analytic" },
-        { name: "Reporting", icon: TrendingUp, href: "/etp/reporting" },
-      ],
-    },
-    {
-      title: "Dossier FMFP",
-      color: "text-cyan-600",
-      modules: [
-        {
-          name: "En soumission",
-          icon: Settings,
-          href: "/etp/fmfp/en_soumission",
-        },
-        {
-          name: "En cours d'execution",
-          icon: Loader,
-          href: "/etp/fmfp/en_execution",
-        },
-        {
-          name: "Cloturé",
-          icon: Lock,
-          href: "/etp/fmfp/cloture",
-        },
-        {
-          name: "Refusé",
-          icon: X,
-          href: "/etp/fmfp/refuse",
-        },
-      ],
-    },
-    {
-      title: "Gestion des Utilisateurs",
-      color: "text-blue-600",
-      modules: [
-        {
-          name: "Employés",
-          icon: Users,
-          count: counts.learners,
-          href: "/etp/employe",
-        },
-        { name: "Administrateurs", icon: Shield, href: "/etp/utilisateurs" },
-        {
-          name: "Mes centres de formation",
-          icon: Building2,
-          count: totalCustomer,
-          href: "/etp/client",
-        },
-      ],
-    },
     {
       title: "Formation & Contenu",
       color: "text-emerald-600",
@@ -197,6 +123,25 @@ export function NavigationSidebarEtp() {
       ],
     },
     {
+      title: "Gestion des Utilisateurs",
+      color: "text-blue-600",
+      modules: [
+        {
+          name: "Employés",
+          icon: Users,
+          count: counts.learners,
+          href: "/etp/employe",
+        },
+        { name: "Administrateurs", icon: Shield, href: "/etp/utilisateurs" },
+        {
+          name: "Mes centres de formation",
+          icon: Building2,
+          count: totalCustomer,
+          href: "/etp/client",
+        },
+      ],
+    },
+    {
       title: "Suivi & Présence",
       color: "text-purple-600",
       modules: [
@@ -220,6 +165,57 @@ export function NavigationSidebarEtp() {
       ],
     },
     {
+      title: "Marketplace",
+      color: "text-cyan-600",
+      modules: [
+        { name: "Catalogue en ligne", icon: BookOpen, href: "/etp/cours" },
+        { name: "Centre de formation", icon: Building2, href: "/etp/centre" },
+        { name: "Annuaire", icon: Notebook, href: "/etp/annuaire" },
+        { name: "Réservations", icon: Ticket, href: "/etp/reservation" },
+        {
+          name: "Loyalty and rewards",
+          icon: Gift,
+          href: "/etp/loyalty_rewards",
+          count: counts.rewards,
+        },
+      ],
+    },
+    /*
+    {
+      title: "Business Intelligence",
+      color: "text-red-600",
+      modules: [
+        { name: "Analytics", icon: BarChart3, href: "/etp/analytic" },
+        { name: "Reporting", icon: TrendingUp, href: "/etp/reporting" },
+      ],
+    },
+    {
+      title: "Dossier FMFP",
+      color: "text-cyan-600",
+      modules: [
+        {
+          name: "En soumission",
+          icon: Settings,
+          href: "/etp/fmfp/en_soumission",
+        },
+        {
+          name: "En cours d'execution",
+          icon: Loader,
+          href: "/etp/fmfp/en_execution",
+        },
+        {
+          name: "Cloturé",
+          icon: Lock,
+          href: "/etp/fmfp/cloture",
+        },
+        {
+          name: "Refusé",
+          icon: X,
+          href: "/etp/fmfp/refuse",
+        },
+      ],
+    },
+    {
       title: "Évaluations",
       color: "text-pink-600",
       modules: [
@@ -235,10 +231,11 @@ export function NavigationSidebarEtp() {
         },
       ],
     },
+    */
   ];
 
   const [collapsedCategories, setCollapsedCategories] = useState(
-    moduleCategories.map(() => false)
+    moduleCategories.map(() => true)
   );
   const toggleCategory = (index) =>
     setCollapsedCategories((prev) =>

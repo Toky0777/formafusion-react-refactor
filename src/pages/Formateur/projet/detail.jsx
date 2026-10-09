@@ -7,7 +7,7 @@ import {
   FaAward,
   FaStar,
 } from "react-icons/fa6";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from '../../../config/axios';
 import LoadingSpinner from '../../../components/ui/loading-spinner';
 import { AlertTriangle, ArrowRight, Award, BarChart3, BookOpen, Calendar, CalendarDays, CheckCircle, Clock, Download, FileText, Laptop, Monitor, Package, ShoppingCart, Target, UserCheck, Users, Wrench } from 'lucide-react';
@@ -22,7 +22,6 @@ const ProjetDetailForm = () => {
   const [error, setError] = useState(false);
   const [projet, setProjets] = useState([]);
   const [idEtp, setIdEtp] = useState([]);
-  const [activeTab, setActiveTab] = useState('vue-ensemble');
   const [idModule, setIdModule] = useState(null);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -74,13 +73,13 @@ const ProjetDetailForm = () => {
 
   const getStatusColor = (status) => {
     const colors = {
-      "En préparation": "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse",
-      "En cours": "bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse",
-      "Terminé": "bg-gradient-to-r from-green-400 via-green-500 to-green-600 animate-pulse",
-      "Planifié": "bg-gradient-to-r from-purple-300 via-purple-400 to-purple-500 animate-pulse",
-      "Cloturé": "bg-gradient-to-r from-red-800 via-red-700 to-red-900 animate-pulse",
+      "En préparation": "bg-amber-100 text-amber-800",
+      "En cours": "bg-blue-100 text-blue-800",
+      "Terminé": "bg-emerald-100 text-emerald-800",
+      "Planifié": "bg-violet-100 text-violet-800",
+      "Cloturé": "bg-slate-200 text-slate-700",
     };
-    return colors[status] || "bg-gray-500 animate-pulse";
+    return colors[status] || "bg-slate-100 text-slate-700";
   };
 
   const getInitials = (firstname, lastname) => {
@@ -190,14 +189,21 @@ const ProjetDetailForm = () => {
 
   return (
     <>
-      <div className="w-full min-h-screen mt-15 ">
-        <div className="w-full h-full pb-5">
+      <div className="min-h-screen w-full scroll-smooth bg-slate-50 pb-20 pt-4 sm:pt-6">
+        <div className="mx-auto w-full max-w-[1600px] space-y-5 px-3 pb-5 sm:px-6">
+          <Link
+            to="/formateur/projects"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-indigo-700"
+          >
+            <span aria-hidden="true">←</span>
+            Retour aux projets
+          </Link>
           {/* En-tête du projet */}
-          <div className="overflow-hidden bg-white">
-            <div className="flex p-6 mb-8">
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex flex-col gap-5 p-4 sm:p-6">
               {/* Section principale - 70% */}
-              <div className="w-[70%] pr-6">
-                <div className="flex gap-4">
+              <div className="w-full">
+                <div className="flex flex-col gap-4 sm:flex-row">
                   {/* Logo entreprise */}
                   <div className="flex-shrink-0">
                     <figure className="w-24 h-24">
@@ -222,7 +228,7 @@ const ProjetDetailForm = () => {
                   <div className="flex flex-col justify-start flex-1 space-y-4">
                     {/* Titre et références */}
                     <div className="space-y-2">
-                      <h2 className="text-xl font-bold text-gray-900">
+                      <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                         {projet.projet.module_name || 'Module non spécifié'}
                       </h2>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
@@ -264,8 +270,8 @@ const ProjetDetailForm = () => {
                     </div>
 
                     {/* Dates */}
-                    <div className="flex items-center gap-6 p-4 rounded-lg bg-gray-50">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-3 rounded-2xl bg-slate-50 p-4 sm:flex-row sm:items-center sm:gap-6">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium text-gray-700">Début :</span>
                         <span className="px-3 py-1 text-gray-800 capitalize bg-white rounded-md shadow-sm">
                           {projet.projet.dateDebut ?
@@ -277,7 +283,7 @@ const ProjetDetailForm = () => {
                             'Non définie'}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium text-gray-700">Fin :</span>
                         <span className="px-3 py-1 text-gray-800 capitalize bg-white rounded-md shadow-sm">
                           {projet.projet.dateFin ?
@@ -300,7 +306,7 @@ const ProjetDetailForm = () => {
                         {projet.projet.modalite || 'Modalité non spécifiée'}
                       </span>
                       <span
-                        className={`inline-flex px-4 py-2 text-sm font-semibold text-white rounded-full ${getStatusColor(projet.projet.project_status)}`}
+                        className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold ${getStatusColor(projet.projet.project_status)}`}
                         title="Le projet de formation est en cours de préparation, avec des détails tels que le programme, les supports de formation, et la logistique en cours de finalisation."
                       >
                         {projet.projet.project_status || 'Statut inconnu'}
@@ -319,23 +325,44 @@ const ProjetDetailForm = () => {
             </div>
           </div>
 
-          {/* Onglets */}
-          <div role="tablist" className="w-full p-6 tabs tabs-bordered lg:tabs-lg">
-            <div className="flex flex-col gap-4 max-w-screen-xl mx-auto w-full h-[calc(100vh-30px)] p-4">
+          <nav
+            aria-label="Navigation dans le projet"
+            className="sticky top-2 z-20 flex max-w-full gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white/95 p-1.5 shadow-sm backdrop-blur"
+          >
+            {[
+              ["participants", "Participants"],
+              ["objectifs", "Objectifs"],
+              ["materiels", "Matériels"],
+              ["agenda", "Agenda"],
+              ["programme", "Programme"],
+              ["ressources", "Ressources"],
+            ].map(([target, label]) => (
+              <a
+                key={target}
+                href={`#${target}`}
+                className="whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="w-full">
+            <div className="mx-auto flex w-full max-w-screen-xl flex-col gap-4 p-1 sm:p-4">
               {/* apprenant */}
-              <div className="w-full p-4 mx-auto max-w-8xl">
-                <div className="overflow-hidden bg-white border border-gray-200 shadow-xl rounded-2xl">
+              <div id="participants" className="w-full scroll-mt-24 p-4 mx-auto max-w-8xl">
+                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
                   {/* En-tête avec gradient */}
                   <div className="bg-gradient-to-r from-gray-50 to-gray-100">
-                    <div className="flex items-center justify-between px-6 py-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
                       <button
                         type="button"
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="flex items-center flex-1 gap-4 p-2 text-gray-600 transition-all duration-200 rounded-lg hover:bg-white/10"
+                        className="flex min-w-0 flex-1 items-center gap-4 rounded-xl p-2 text-left text-slate-700 transition hover:bg-white"
                       >
                         <FaUsers className="text-2xl" />
-                        <div className="flex items-center gap-3">
+                        <div className="flex min-w-0 items-center gap-3">
                           <span className="text-xl font-semibold">Participants</span>
                           <span className="px-3 py-1 text-sm font-medium rounded-full bg-white/20">
                             {projet?.apprs?.length || 0}
@@ -517,7 +544,7 @@ const ProjetDetailForm = () => {
                 </div>
               </div>
               {/* objectif */}
-              <div className="w-full p-4 mx-auto max-w-8xl">
+              <div id="objectifs" className="w-full scroll-mt-24 p-4 mx-auto max-w-8xl">
                 <div className="overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-xl rounded-2xl hover:shadow-2xl">
 
                   {/* En-tête avec gradient */}
@@ -612,7 +639,7 @@ const ProjetDetailForm = () => {
                 </div>
               </div>
               {/* materiel */}
-              <div className="w-full p-4 mx-auto max-w-8xl">
+              <div id="materiels" className="w-full scroll-mt-24 p-4 mx-auto max-w-8xl">
                 <div className="overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-xl rounded-2xl hover:shadow-2xl">
 
                   {/* En-tête avec gradient */}
@@ -712,7 +739,7 @@ const ProjetDetailForm = () => {
                 </div>
               </div>
               {/* agenda */}
-              <div className="w-full p-4 mx-auto max-w-8xl">
+              <div id="agenda" className="w-full scroll-mt-24 p-4 mx-auto max-w-8xl">
                 <div className="overflow-hidden transition-all duration-300 bg-white border border-gray-200 shadow-xl rounded-2xl hover:shadow-2xl" >
                   {/* En-tête avec gradient */}
                   <div className="px-6 py-5 bg-gradient-to-r from-gray-50 to-gray-100">
@@ -847,7 +874,7 @@ const ProjetDetailForm = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full max-w-6xl mx-auto space-y-6">
+              <div id="programme" className="w-full max-w-6xl mx-auto scroll-mt-24 space-y-6">
                 {/* Section Programme pédagogique */}
                 <div className="overflow-hidden transition-all duration-500 bg-white border border-gray-200 shadow-lg rounded-2xl group hover:shadow-xl">
                   {/* Header */}
@@ -898,7 +925,7 @@ const ProjetDetailForm = () => {
                 </div>
 
                 {/* Section Ressources téléchargeables */}
-                <div className="overflow-hidden transition-all duration-500 bg-white border border-gray-200 shadow-lg rounded-2xl group hover:shadow-xl">
+                <div id="ressources" className="scroll-mt-24 overflow-hidden transition-all duration-500 bg-white border border-gray-200 shadow-lg rounded-2xl group hover:shadow-xl">
                   {/* Header */}
                   <div className="relative px-6 py-6 overflow-hidden bg-gradient-to-r from-gray-50 to-gray-100">
                     <div className="absolute inset-0 transition-transform duration-1000 transform translate-x-full -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:-translate-x-full"></div>

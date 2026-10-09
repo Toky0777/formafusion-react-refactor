@@ -4,7 +4,7 @@ import {
   FaXmark,  FaChalkboard, 
   FaBullseye, FaBoxOpen, FaMinus 
 } from "react-icons/fa6";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from "framer-motion";
 import axios from '../../../config/axios';
 import LoadingSpinner from '../../../components/ui/loading-spinner';
@@ -411,13 +411,13 @@ const manageApprenant = async (apprenant, id) => {
 
   const getStatusColor = (status) => {
         const colors = {
-            "En préparation": "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse",
-            "En cours": "bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse",
-            "Terminé": "bg-gradient-to-r from-green-400 via-green-500 to-green-600 animate-pulse",
-            "Planifié": "bg-gradient-to-r from-purple-300 via-purple-400 to-purple-500 animate-pulse",
-            "Cloturé": "bg-gradient-to-r from-red-800 via-red-700 to-red-900 animate-pulse",
+            "En préparation": "bg-amber-100 text-amber-800",
+            "En cours": "bg-blue-100 text-blue-800",
+            "Terminé": "bg-emerald-100 text-emerald-800",
+            "Planifié": "bg-violet-100 text-violet-800",
+            "Cloturé": "bg-slate-200 text-slate-700",
         };
-        return colors[status] || "bg-gray-500 animate-pulse";
+        return colors[status] || "bg-slate-100 text-slate-700";
   };
 
      const getFinancementIcon = (type) => {
@@ -516,19 +516,26 @@ const manageApprenant = async (apprenant, id) => {
 
   return (
     <>
-    <div className="w-full min-h-screen mt-15 mb-20">
-        <div className="w-full h-full">
+    <div className="min-h-screen w-full scroll-smooth bg-slate-50 pb-20 pt-4 sm:pt-6">
+        <div className="mx-auto w-full max-w-[1600px] space-y-5 px-3 sm:px-6">
+          <Link
+            to="/etp/projet"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-indigo-700"
+          >
+            <span aria-hidden="true">←</span>
+            Retour aux projets
+          </Link>
                   {/* En-tête du projet */}
-                   <div className="bg-white overflow-hidden">
-                          <div className="flex p-6 mb-8">
+                   <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                          <div className="flex flex-col gap-5 p-4 sm:p-6">
                               {/* Section principale - 70% */}
-                              <div className="w-[70%] pr-6">
-                                  <div className="flex gap-4">
+                              <div className="w-full">
+                                  <div className="flex flex-col gap-4 sm:flex-row">
                                       {/* Informations du projet */}
-                                      <div className="pl-6 flex flex-col justify-start flex-1 space-y-4">
+                                      <div className="flex min-w-0 flex-1 flex-col justify-start space-y-4">
                                           {/* Titre et références */}
                                           <div className="space-y-2">
-                                              <h2 className="text-xl font-bold text-gray-900">
+                                              <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                                                   {projet.projet.module_name || 'Module non spécifié'}
                                               </h2>
                                               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
@@ -570,8 +577,8 @@ const manageApprenant = async (apprenant, id) => {
                                         </div>
 
                                           {/* Dates */}
-                                          <div className="flex items-center gap-6 p-4 bg-gray-50 rounded-lg">
-                                              <div className="flex items-center gap-2">
+                                          <div className="flex flex-col gap-3 rounded-2xl bg-slate-50 p-4 sm:flex-row sm:items-center sm:gap-6">
+                                              <div className="flex flex-wrap items-center gap-2">
                                                   <span className="font-medium text-gray-700">Début :</span>
                                                   <span className="px-3 py-1 bg-white rounded-md shadow-sm text-gray-800 capitalize">
                                                       {projet.projet.dateDebut ?
@@ -583,7 +590,7 @@ const manageApprenant = async (apprenant, id) => {
                                                           'Non définie'}
                                                   </span>
                                               </div>
-                                              <div className="flex items-center gap-2">
+                                              <div className="flex flex-wrap items-center gap-2">
                                                   <span className="font-medium text-gray-700">Fin :</span>
                                                   <span className="px-3 py-1 bg-white rounded-md shadow-sm text-gray-800 capitalize">
                                                       {projet.projet.dateFin ?
@@ -606,7 +613,7 @@ const manageApprenant = async (apprenant, id) => {
                                                   {projet.projet.modalite || 'Modalité non spécifiée'}
                                               </span>
                                                <span 
-                                                className={`px-3 py-2 text-sm h-max text-white w-max rounded-xl ${getStatusColor(projet.projet.project_status)}`} 
+                                                className={`h-max w-max rounded-full px-4 py-2 text-sm font-semibold ${getStatusColor(projet.projet.project_status)}`}
                                                 title="Le projet de formation est en cours de préparation, avec des détails tels que le programme, les supports de formation, et la logistique en cours de finalisation."
                                                >
                                                 {projet.projet.project_status}
@@ -626,27 +633,31 @@ const manageApprenant = async (apprenant, id) => {
                   </div>
 
                     {/* Onglets */}
-                  <div role="tablist" className="w-full p-6 tabs tabs-bordered lg:tabs-lg">
+                  <div className="w-full">
                               {/* Onglet 1 - Vue d'ensemble */}
-                               <div className="flex gap-2 mb-4">
+                               <div role="tablist" aria-label="Sections du projet" className="sticky top-[4.5rem] z-10 mb-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
                                   <button
+                                      role="tab"
+                                      aria-selected={activeTab === 'vue-ensemble'}
                                       onClick={() => setActiveTab('vue-ensemble')}
-                                      className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeTab === 'vue-ensemble' ? 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-600 ' : 'text-gray-600 hover:bg-gray-100'}`}
+                                      className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${activeTab === 'vue-ensemble' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}
                                   >
                                       Vue d'ensemble
                                   </button>
                                   <button
+                                      role="tab"
+                                      aria-selected={activeTab === 'detail-formation'}
                                       onClick={() => setActiveTab('detail-formation')}
-                                      className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeTab === 'detail-formation' ? 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-600 ' : 'text-gray-600 hover:bg-gray-100'}`}
+                                      className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${activeTab === 'detail-formation' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'}`}
                                   >
                                       Détail de la formation
                                   </button>
                               </div>
 
-                               <div role="tabpanel" className="tab-content">
+                               <div role="tabpanel" aria-label="Contenu du projet" className="tab-content min-w-0">
                                     {activeTab === 'vue-ensemble' && (
-                                              <div className="flex w-full">
-                                                  <div className="w-[60%]">
+                                              <div className="flex w-full flex-col gap-4 xl:flex-row">
+                                                  <div className="w-full xl:w-[60%]">
                                                         {/* apprenant */}
                                                         <div className="w-full max-w-6xl mx-auto p-4">
                                                             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
@@ -1471,7 +1482,7 @@ const manageApprenant = async (apprenant, id) => {
                                                         </div>
                                                   </div>
 
-                                                  <div className="w-[40%]">
+                                                  <div className="w-full xl:w-[40%]">
                                                           {/* Lieu et salle */}
                                                           <div className="aw-full max-w-6xl mx-auto p-4">
                                                                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">

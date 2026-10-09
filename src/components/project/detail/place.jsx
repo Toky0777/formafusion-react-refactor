@@ -117,18 +117,18 @@ export const PlaceSection = ({
   return (
     <div className="w-full max-w-6xl p-4 mx-auto">
       <div className="overflow-hidden bg-white border border-gray-100 shadow-lg rounded-2xl">
-        <h2 className="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <span className="collapsed w-full inline-flex !rounded-xl items-center justify-between">
+        <h2 className="px-4 py-4 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <span className="collapsed flex w-full flex-wrap items-center justify-between gap-3 !rounded-xl">
             <button
               onClick={toggleAfficheLieu}
-              className="flex items-center gap-3 text-gray-700 transition-colors duration-200 hover:text-purple-600 group"
+              className="flex items-center flex-1 min-w-0 gap-3 text-left text-gray-700 transition-colors duration-200 group hover:text-purple-600"
             >
               <div className="p-2 transition-shadow duration-200 bg-white rounded-lg shadow-sm group-hover:shadow-md">
                 <MapPin className="w-5 h-5 text-blue-600" />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-semibold text-gray-800">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-lg font-semibold text-gray-800 sm:text-xl">
                     Lieu et salle
                   </h2>
                   <span className="px-3 py-1 text-sm font-medium text-purple-700 bg-purple-100 rounded-full">
@@ -147,7 +147,7 @@ export const PlaceSection = ({
                 )}
               </div>
             </button>
-            <div className="flex justify-end w-full pr-4 mt-2">
+            <div className="flex justify-end shrink-0">
               <button
                 onClick={() => setShowPage(true)}
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 transition-all duration-300 bg-transparent border-2 border-gray-600 shadow-sm rounded-xl hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:shadow-md"

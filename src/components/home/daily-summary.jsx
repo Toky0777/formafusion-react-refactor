@@ -51,7 +51,7 @@ export function DailySummary({ data }) {
   const nonCloture = data?.nonCloture || 0;
 
   return (
-    <Card className="shadow-sm bg-white">
+    <Card className="bg-white shadow-sm">
       <CardHeader className="pb-4">
         {/* <CardTitle className="text-xl font-bold text-gray-700 capitalize text-card-foreground">
           <T>Bonjour</T> {customer_name}
@@ -234,47 +234,6 @@ export function DailySummaryEtp({ data }) {
                   Loyalty and Rewards
                 </p>
               </div>
-            </div>
-
-            <div className="md:col-span-2 lg:col-span-3">
-              <Card className="transition-all duration-300 border-0 bg-gradient-to-r from-blue-100 to-blue-200 hover:shadow-xl">
-                <CardContent className="p-8">
-                  <div className="flex flex-col items-center justify-between gap-6 lg:flex-row">
-                    <div className="flex items-center gap-6">
-                      <div className="p-4 bg-blue-600 shadow-md rounded-2xl">
-                        <Building2 className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="text-center lg:text-left">
-                        <h3 className="mb-2 text-2xl font-bold text-blue-900">
-                          Invitez vos centres de formation
-                        </h3>
-                        <p className="max-w-2xl text-lg leading-relaxed text-blue-800">
-                          Gérez vos collaborations et projets de formation
-                          directement avec vos centres préférés. Formafusion est
-                          simple et gratuite.
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-3 sm:flex-row">
-                      <Button
-                        size="lg"
-                        className="px-8 py-3 font-semibold text-white transition-all duration-200 bg-blue-600 shadow-md hover:bg-blue-700 hover:shadow-lg"
-                      >
-                        <UserPlus className="w-5 h-5 mr-2" />
-                        Inviter un centre
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="px-8 py-3 font-semibold text-blue-700 bg-transparent border-blue-600 hover:bg-blue-50 hover:text-blue-800"
-                        onClick={() => setShowCollaborationDialog(true)}
-                      >
-                        En savoir plus
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </CardContent>

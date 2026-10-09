@@ -168,17 +168,17 @@ const ProjectDetail = () => {
   const getStatusColor = (status) => {
     const colors = {
       "En préparation":
-        "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 animate-pulse",
+        "bg-amber-100 text-amber-800",
       "En cours":
-        "bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 animate-pulse",
+        "bg-blue-100 text-blue-800",
       Terminé:
-        "bg-gradient-to-r from-green-400 via-green-500 to-green-600 animate-pulse",
+        "bg-emerald-100 text-emerald-800",
       Planifié:
-        "bg-gradient-to-r from-purple-300 via-purple-400 to-purple-500 animate-pulse",
+        "bg-violet-100 text-violet-800",
       Cloturé:
-        "bg-gradient-to-r from-red-800 via-red-700 to-red-900 animate-pulse",
+        "bg-slate-200 text-slate-700",
     };
-    return colors[status] || "bg-gray-500 animate-pulse";
+    return colors[status] || "bg-slate-100 text-slate-700";
   };
 
   const fetchProjectDetails = async (id, showLoading = true) => {
@@ -1065,13 +1065,21 @@ const ProjectDetail = () => {
           animation: slide-in-from-top 0.3s ease-out;
         }
       `}</style>
-      <div className="w-full min-h-screen mb-20 mt-15">
-        <div className="w-full h-full">
+      <div className="min-h-screen w-full scroll-smooth bg-slate-50 pb-20 pt-4 sm:pt-6">
+        <div className="mx-auto w-full max-w-[1600px] space-y-5 px-3 sm:px-6">
           <input type="hidden" id="idProjet" value={id} />
           <input type="hidden" value={id} id="main_project_get_id" />
 
+          <Link
+            to="/cfp/projet/en_cours"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-indigo-700"
+          >
+            <span aria-hidden="true">←</span>
+            Retour aux projets
+          </Link>
+
           {/* Barre d'actions */}
-          <div className="flex flex-wrap items-center justify-start w-full gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+          <div className="sticky top-2 z-20 flex w-full flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur sm:gap-3 sm:p-4">
             <button
               onClick={() => setShowPageDossier(true)}
               className="group flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition-all duration-200 shadow-sm hover:shadow-md"
@@ -2111,11 +2119,11 @@ const ProjectDetail = () => {
           />
 
           {/* En-tête du projet */}
-          <div className="overflow-hidden bg-white">
-            <div className="flex p-6 mb-8">
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex flex-col gap-6 p-4 sm:p-6 xl:flex-row">
               {/* Section principale - 70% */}
-              <div className="w-[70%] pr-6">
-                <div className="flex gap-4">
+              <div className="w-full xl:w-[70%] xl:pr-6">
+                <div className="flex flex-col gap-4 sm:flex-row">
                   {/* Logo entreprise */}
                   <div className="flex-shrink-0">
                     <figure className="w-24 h-24">
@@ -2137,7 +2145,7 @@ const ProjectDetail = () => {
                   <div className="flex flex-col justify-start flex-1 space-y-4">
                     {/* Titre et références */}
                     <div className="space-y-2">
-                      <h2 className="text-xl font-bold text-gray-900">
+                      <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                         {projet?.projet?.module_name || "Module non spécifié"}
                       </h2>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
@@ -2197,8 +2205,8 @@ const ProjectDetail = () => {
                     </div>
 
                     {/* Dates */}
-                    <div className="flex items-center gap-6 p-4 rounded-lg bg-gray-50">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-3 rounded-2xl bg-slate-50 p-4 sm:flex-row sm:items-center sm:gap-6">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium text-gray-700">
                           Début :
                         </span>
@@ -2214,7 +2222,7 @@ const ProjectDetail = () => {
                             : "Non définie"}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium text-gray-700">Fin :</span>
                         <span className="px-3 py-1 text-gray-800 capitalize bg-white rounded-md shadow-sm">
                           {projet?.projet?.dateFin
@@ -2263,7 +2271,7 @@ const ProjectDetail = () => {
               </div>
 
               {/* Section actions - 30% */}
-              <div className="w-[30%] border-l border-gray-200 pl-6">
+              <div className="w-full xl:w-[30%] xl:border-l xl:border-gray-200 xl:pl-6">
                 <div className="space-y-4">
                   {/* Modals (inchangées) */}
                   <ConfirmationModal
@@ -2364,37 +2372,42 @@ const ProjectDetail = () => {
           </div>
 
           {/* Onglets */}
-          <div
-            role="tablist"
-            className="w-full p-6 tabs tabs-bordered lg:tabs-lg"
-          >
+          <div className="w-full">
             {/* Onglet 1 - Vue d'ensemble */}
-            <div className="flex gap-2 mb-4">
+            <div
+              role="tablist"
+              aria-label="Sections du projet"
+              className="sticky top-[4.5rem] z-10 mb-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm"
+            >
               <button
+                role="tab"
+                aria-selected={activeTab === "vue-ensemble"}
                 onClick={() => setActiveTab("vue-ensemble")}
-                className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeTab === "vue-ensemble"
-                  ? "bg-gray-100 text-gray-600"
-                  : "text-gray-600 hover:bg-gray-100"
+                className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${activeTab === "vue-ensemble"
+                  ? "bg-indigo-600 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100"
                   }`}
               >
                 Vue d'ensemble
               </button>
               <button
+                role="tab"
+                aria-selected={activeTab === "detail-formation"}
                 onClick={() => setActiveTab("detail-formation")}
-                className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${activeTab === "detail-formation"
-                  ? "bg-gray-100 text-gray600"
-                  : "text-gray-600 hover:bg-gray-100"
+                className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${activeTab === "detail-formation"
+                  ? "bg-indigo-600 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100"
                   }`}
               >
                 Détail de la formation
               </button>
             </div>
 
-            <div role="tabpanel" className="tab-content">
+            <div role="tabpanel" className="tab-content min-w-0">
               {activeTab === "vue-ensemble" && (
-                <div className="flex w-full">
+                <div className="flex w-full flex-col gap-4 xl:flex-row">
                   {/* Colonne gauche */}
-                  <div className="w-[60%]">
+                  <div className="w-full xl:w-[60%]">
                     {/* Apprenants */}
                     <div className="w-full max-w-6xl p-4 mx-auto">
                       {/* Header Card */}
@@ -2647,7 +2660,7 @@ const ProjectDetail = () => {
                   </div>
 
                   {/* Colonne droite */}
-                  <div className="w-[40%]">
+                  <div className="w-full xl:w-[40%]">
                     {/* Lieu et salle */}
                     <PlaceSection
                       id={id}
