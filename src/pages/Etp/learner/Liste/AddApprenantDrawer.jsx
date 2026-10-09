@@ -341,27 +341,11 @@ const AddApprenantDrawer = ({ isOpen, onClose, onEmployeeAdded, etpId }) => {
 
 
   const downloadTemplate = () => {
-    // Template plus complet avec instructions
     const templateData = [
-      ['# IMPORTANT: Ne modifiez pas les noms des colonnes'],
-      ['# Les colonnes marquées (*) sont obligatoires'],
-      ['# Format attendu pour chaque colonne:'],
-      ['# matricule - Texte (optionnel)'],
-      ['# nom(*) - Texte (min. 2 caractères)'],
-      ['# prenom - Texte (optionnel)'],
-      ['# telephone - Format: +261 34 12 345 67'],
-      ['# email - Format email valide'],
-      ['# ville - Une des villes disponibles'],
-      ['# code_postal - Texte'],
-      ['# lot - Texte'],
-      ['# quartier - Texte'],
-      ['# fonction - Texte'],
-      [''],
       ['matricule', 'nom', 'prenom', 'telephone', 'email', 'ville', 'code_postal', 'lot', 'quartier', 'fonction'],
       ['EMP001', 'Dupont', 'Jean', '+261341234567', 'jean@email.com', 'Antananarivo', '101', 'Lot A1', 'Analakely', 'Manager'],
       ['EMP002', 'Martin', 'Marie', '+261321234568', 'marie@email.com', 'Toamasina', '501', 'Lot B2', 'Tanambao', 'Développeur']
     ];
-
 
     let csvContent = templateData.map(row => row.join(',')).join('\n');
 

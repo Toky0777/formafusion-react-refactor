@@ -48,12 +48,12 @@ export function ProjectsWidget({ data, basePath = "cfp", handleShowProject }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4  ">
+          <div className="space-y-4 ">
             {projects.length > 0 ? (
               projects.map((project) => (
                 <div
                   key={project.idProjet}
-                  className="bg-gray-100 p-4 mt-4 space-y-3 transition-colors border rounded-lg hover:bg-muted/50"
+                  className="p-4 mt-4 space-y-3 transition-colors bg-gray-100 border rounded-lg hover:bg-muted/50"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -88,7 +88,7 @@ export function ProjectsWidget({ data, basePath = "cfp", handleShowProject }) {
                       <img
                         src={`${imageBaseUrl}/img/formateurs/${project.photoForm}`}
                         alt="Formateur"
-                        className="w-10 h-10 rounded-full object-cover border border-gray-300 shadow-sm"
+                        className="object-cover w-10 h-10 border border-gray-300 rounded-full shadow-sm"
                       />
                       <span className="text-sm font-medium text-gray-700">
                         <T>Formateur :</T> {project.formateur_name}
@@ -183,10 +183,10 @@ export function ProjectsWidgetEtp({ data, basePath = "cfp" }) {
           <div className="space-y-4">
             {projetsPlanifie.length > 0 ? (
               projetsPlanifie.map((projet) => (
-                <Link to={`/${basePath}/projet/detail/${projet.idProjet}`}>
+                <Link to={`/${basePath}/projects/detail/${projet.idProjet}`}>
                   <div
                     key={projet.idProjet || projet.id}
-                    className="bg-gray-100 p-4 mt-4 space-y-3 transition-colors border rounded-lg hover:bg-muted/50"
+                    className="p-4 mt-4 space-y-3 transition-colors bg-gray-100 border rounded-lg hover:bg-muted/50"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
@@ -245,7 +245,7 @@ export function ProjectsWidgetEtp({ data, basePath = "cfp" }) {
                 <Link to={`/${basePath}/projet/detail/${projet.idProjet}`}>
                   <div
                     key={projet.idProjet || projet.id}
-                    className="bg-gray-100 p-4 mt-4 space-y-3 transition-colors border rounded-lg hover:bg-muted/50"
+                    className="p-4 mt-4 space-y-3 transition-colors bg-gray-100 border rounded-lg hover:bg-muted/50"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
@@ -311,7 +311,7 @@ export function ProjectsWidgetEtp({ data, basePath = "cfp" }) {
                 <Link to={`/${basePath}/projet/detail/${projet.idProjet}`}>
                   <div
                     key={projet.idProjet || projet.id}
-                    className="bg-gray-100 p-4 mt-4 space-y-3 transition-colors border rounded-lg hover:bg-muted/50"
+                    className="p-4 mt-4 space-y-3 transition-colors bg-gray-100 border rounded-lg hover:bg-muted/50"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
@@ -335,8 +335,8 @@ export function ProjectsWidgetEtp({ data, basePath = "cfp" }) {
                             {projet.dateFin
                               ? ` - ${formatDate(projet.dateFin)}`
                               : projet.time
-                              ? ` à ${projet.time}`
-                              : ""}
+                                ? ` à ${projet.time}`
+                                : ""}
                           </span>
                         </div>
                         <span className="text-sm font-medium text-chart-1">

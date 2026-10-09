@@ -34,13 +34,13 @@ export default function HomePageForm() {
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-4">
           <div className="space-y-8 xl:col-span-3">
             <DailySummaryForm data={data} />
+            <ProjectsWidgetEtp data={data} basePath="formateur" />
             <PhotoGalleryWidget data={data} />
           </div>
           <div className="xl:col-span-1">
-            <SessionsWidget data={data} basePath="form" />
+            <SessionsWidget data={data} basePath="formateur" />
           </div>
         </div>
-        <ProjectsWidgetEtp data={data} basePath="form" />
       </main>
     </div>
   );
