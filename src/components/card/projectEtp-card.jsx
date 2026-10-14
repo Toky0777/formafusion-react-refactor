@@ -27,9 +27,9 @@ const ProjectCard = ({
   setting,
 }) => {
 
-  const note = project?.evaluation?.[0] ?? 0; 
+  const note = project?.evaluation?.[0] ?? 0;
   const avis = project?.evaluation?.[1] ?? 0;
-  
+
   const getStatusColor = (status) => {
     const colors = {
       "En préparation":
@@ -56,7 +56,7 @@ const ProjectCard = ({
     const hasHalfStar = rating % 1 >= 0.5;
 
     return (
-        <div className=""></div>
+      <div className=""></div>
     );
   };
 
@@ -95,7 +95,7 @@ const SubContractorBadge = () => (
   <div className="absolute top-0 right-0 z-0">
     <div className="relative">
       <div className="w-0 h-0 border-t-[80px] border-t-emerald-500 border-l-[80px] border-l-transparent"></div>
-      <div className="absolute top-2 right-2 transform rotate-45">
+      <div className="absolute transform rotate-45 top-2 right-2">
         <div className="flex flex-col items-center gap-0.5">
           <svg
             className="w-4 h-4 text-white drop-shadow-md"
@@ -120,11 +120,11 @@ const SubContractorBadge = () => (
 
 const ProjectHeader = ({ project }) => (
   <>
-    <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-700 cursor-pointer line-clamp-2 hover:text-blue-600 transition">
+    <h3 className="flex items-center gap-2 text-sm font-semibold transition cursor-pointer text-slate-700 line-clamp-2 hover:text-blue-600">
       <BookOpen className="w-4 h-4 text-blue-500" />
       {project?.module_name}
     </h3>
-    <p className="italic text-xs text-slate-500">
+    <p className="text-xs italic text-slate-500">
       Ref : {project?.project_reference}
     </p>
   </>
@@ -134,12 +134,12 @@ const RatingSection = ({ note, avis, renderStars }) => (
   <div className="flex items-center gap-2 mt-3">
     {renderStars(note)}
     <div className="flex items-center gap-1.5 px-2.5 py-1 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-full border border-amber-200/50 shadow-sm">
-      <span className="font-bold text-sm bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+      <span className="text-sm font-bold text-transparent bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text">
         {note.toFixed(1).replace(".", ",")}
       </span>
-      <span className="text-amber-400 text-xs">★</span>
+      <span className="text-xs text-amber-400">★</span>
     </div>
-    <div className="flex items-center gap-1 text-gray-500 text-sm">
+    <div className="flex items-center gap-1 text-sm text-gray-500">
       <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
         <path
@@ -154,7 +154,7 @@ const RatingSection = ({ note, avis, renderStars }) => (
 );
 
 const ProjectMenu = ({ project, showMenu, onMenuToggle, onActionClick }) => (
-  <div className="relative mt-4 flex justify-end col-span-1">
+  <div className="relative flex justify-end col-span-1 mt-4">
     <button
       onClick={() => onMenuToggle(project.idProjet)}
       className="flex items-center justify-center w-12 h-12 duration-200 rounded-xl hover:bg-gray-100"
@@ -163,14 +163,14 @@ const ProjectMenu = ({ project, showMenu, onMenuToggle, onActionClick }) => (
     </button>
 
     {showMenu === project.idProjet && (
-      <ul className="absolute right-0 top-14 z-20 w-64 rounded-xl bg-white shadow-lg ring-1 ring-slate-200 divide-y divide-slate-100 text-slate-700">
-        <li className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <ul className="absolute right-0 z-20 w-64 bg-white divide-y shadow-lg top-14 rounded-xl ring-1 ring-slate-200 divide-slate-100 text-slate-700">
+        <li className="px-4 py-2 text-xs font-semibold tracking-wide uppercase text-slate-400">
           Actions
         </li>
         <li>
           <Link
-            to={`/formateur/projects/detail/${project.idProjet}`}
-            className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 transition rounded-md"
+            to={`/etp/projet/detail/${project.idProjet}`}
+            className="flex items-center gap-2 px-4 py-2 transition rounded-md hover:bg-slate-50"
           >
             <FaEye className="text-indigo-500" /> Aperçu
           </Link>
@@ -181,23 +181,22 @@ const ProjectMenu = ({ project, showMenu, onMenuToggle, onActionClick }) => (
 );
 
 const ProjectBadges = ({ project, getStatusColor, formatStatus }) => (
-  <div className="flex justify-between mt-4 items-center">
-    <div className="flex gap-2 flex-wrap">
+  <div className="flex items-center justify-between mt-4">
+    <div className="flex flex-wrap gap-2">
       <span
-        className={`px-3 py-1 rounded-2xl text-sm font-medium transition ${
-          project.project_type === "inter"
+        className={`px-3 py-1 rounded-2xl text-sm font-medium transition ${project.project_type === "inter"
             ? "text-purple-700 bg-purple-100 hover:bg-purple-200"
             : "text-blue-700 bg-blue-100 hover:bg-blue-200"
-        }`}
+          }`}
       >
         {project.project_type}
       </span>
 
-      <span className="px-3 py-1 rounded-2xl text-sm font-medium text-cyan-700 bg-cyan-100 hover:bg-cyan-200 transition">
+      <span className="px-3 py-1 text-sm font-medium transition rounded-2xl text-cyan-700 bg-cyan-100 hover:bg-cyan-200">
         {project.modalite}
       </span>
 
-      <span className="px-3 py-1 rounded-2xl text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition">
+      <span className="px-3 py-1 text-sm font-medium transition rounded-2xl text-slate-600 bg-slate-100 hover:bg-slate-200">
         {project.paiement}
       </span>
     </div>
@@ -227,7 +226,7 @@ const LocationSection = ({ project, onActionClick }) => (
   <div
     onClick={() => onActionClick.handleShowLieu(project.idProjet)}
     title="Lieu de formation"
-    className="w-full inline-flex items-center gap-2 cursor-pointer hover:text-blue-600 transition mb-2"
+    className="inline-flex items-center w-full gap-2 mb-2 transition cursor-pointer hover:text-blue-600"
   >
     <MapPin className="w-4 h-4 text-gray-400" />
     <p className="line-clamp-1 underline-offset-4 hover:underline">
@@ -239,7 +238,7 @@ const LocationSection = ({ project, onActionClick }) => (
 const DossierSection = ({ project }) => (
   <div
     title="Dossier"
-    className="inline-flex items-center gap-2 cursor-pointer hover:text-purple-600 transition mt-auto"
+    className="inline-flex items-center gap-2 mt-auto transition cursor-pointer hover:text-purple-600"
   >
     <Folder className="w-4 h-4 text-gray-400" />
     <p className="line-clamp-1 underline-offset-4 hover:underline">
@@ -251,7 +250,7 @@ const DossierSection = ({ project }) => (
 const DescriptionSection = ({ project }) => (
   <div className="flex items-start gap-2 mt-1 mb-4">
     <Info className="w-4 h-4 text-gray-400 shrink-0 mt-[2px]" />
-    <p className="line-clamp-2 text-sm text-gray-600">
+    <p className="text-sm text-gray-600 line-clamp-2">
       {project.project_description?.trim() || "Pas de description"}
     </p>
   </div>
@@ -260,7 +259,7 @@ const DescriptionSection = ({ project }) => (
 const ParticipantsSection = ({ project, onActionClick }) => (
   <div className="flex items-center justify-between mb-4">
     <ApprenantsSection project={project} onActionClick={onActionClick} />
-    <EntrepriseSection project={project} onActionClick={onActionClick} />
+    <CentreFormationSection project={project} />
   </div>
 );
 
@@ -273,35 +272,35 @@ const ApprenantsSection = ({ project, onActionClick }) => (
   >
     {project.apprs && project.apprs.length > 0 ? (
       <div className="flex items-center gap-2">
-        <div className="flex -space-x-3 hover:-space-x-2 transition-all duration-300">
+        <div className="flex -space-x-3 transition-all duration-300 hover:-space-x-2">
           {project.apprs.slice(0, 3).map((apprenant, i) =>
             apprenant.emp_photo ? (
               <div
                 key={i}
-                className="relative group transition-transform duration-300 hover:scale-110 hover:z-10"
+                className="relative transition-transform duration-300 group hover:scale-110 hover:z-10"
               >
                 <img
                   src={`${IMAGE_URL}/img/employes/${apprenant.emp_photo}`}
                   alt="Employé"
-                  className="object-cover w-9 h-9 rounded-full ring-2 ring-white shadow-md"
+                  className="object-cover rounded-full shadow-md w-9 h-9 ring-2 ring-white"
                   title="Apprenant"
                 />
-                <div className="absolute inset-0 rounded-full bg-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-cyan-500/20 group-hover:opacity-100"></div>
               </div>
             ) : (
               <div
                 key={i}
-                className="relative group flex items-center justify-center w-9 h-9 font-bold text-xs uppercase rounded-full bg-gradient-to-br from-cyan-100 to-blue-100 ring-2 ring-white text-cyan-700 shadow-md transition-transform duration-300 hover:scale-110 hover:z-10"
+                className="relative flex items-center justify-center text-xs font-bold uppercase transition-transform duration-300 rounded-full shadow-md group w-9 h-9 bg-gradient-to-br from-cyan-100 to-blue-100 ring-2 ring-white text-cyan-700 hover:scale-110 hover:z-10"
               >
                 {apprenant.emp_initial_name || "A"}
-                <div className="absolute inset-0 rounded-full bg-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-cyan-500/20 group-hover:opacity-100"></div>
               </div>
             )
           )}
         </div>
 
         {project.apprs.length > 3 && (
-          <div className="flex items-center justify-center text-xs font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full h-9 w-9 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ring-2 ring-white">
+          <div className="flex items-center justify-center text-xs font-bold text-white transition-all duration-300 rounded-full shadow-md bg-gradient-to-r from-cyan-500 to-blue-500 h-9 w-9 hover:shadow-lg hover:scale-105 ring-2 ring-white">
             +{project.apprs.length - 3}
           </div>
         )}
@@ -312,68 +311,67 @@ const ApprenantsSection = ({ project, onActionClick }) => (
   </div>
 );
 
-const EntrepriseSection = ({ project, onActionClick }) => (
+const CentreFormationSection = ({ project }) => (
   <div
-    className="group cursor-pointer"
-    onClick={() =>
-      onActionClick.handleShowEntreprise(project.idEtp, project.idProjet)
-    }
+    className="inline-flex w-38 items-center px-3 py-1.5 rounded-lg bg-gradient-to-r from-slate-100 to-slate-200 shadow-md"
+    title="Centre de formation"
   >
-        <div className="inline-flex w-38 items-center px-3 py-1.5 rounded-lg bg-gradient-to-r from-slate-100 to-slate-200 shadow-md">
-          <span className="text-sm font-semibold text-slate-600 whitespace-nowrap overflow-hidden text-ellipsis">
-            {project.etp_name}
-          </span>
-        </div>
+    <span className="overflow-hidden text-sm font-semibold text-slate-600 whitespace-nowrap text-ellipsis">
+      {project.nameCfpInter ||
+        project.nameCfp ||
+        project.cfp_name ||
+        "Centre de formation non spécifié"}
+    </span>
   </div>
 );
 
 const FormateurSection = ({ project, onActionClick }) => (
   <div
-    className="group cursor-pointer"
+    className="cursor-pointer group"
   >
-      {project?.formateurs && project?.formateurs.length > 0 ? (
-        <div className="flex -space-x-3">
-          {project?.formateurs.map((f, i) => (
-            <div 
-              onClick={() =>
-                onActionClick.handleShowFormateurs(
-                  f.idFormateur,
-                  project.idProjet
-                )
-              }
-              key={i} 
-              className="relative"
-            >
-              <img
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-md group-hover:ring-cyan-400 group-hover:scale-110 transition-all duration-300"
-                src={`${IMAGE_URL}/img/formateurs/${f?.form_photo}`}
-                alt="Formateur"
-                title="Formateur"
-              />
-              <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full ring-2 ring-white flex items-center justify-center">
-                <svg
-                  className="w-2 h-2 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="absolute inset-0 rounded-full bg-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    {project?.formateurs && project?.formateurs.length > 0 ? (
+      <div className="flex -space-x-3">
+        {project?.formateurs.map((f, i) => (
+          <div
+            onClick={() =>
+              onActionClick.handleShowFormateurs(
+                f.idFormateur,
+                project.idProjet
+              )
+            }
+            key={i}
+            className="relative"
+          >
+            <img
+              className="object-cover w-10 h-10 transition-all duration-300 rounded-full shadow-md ring-2 ring-white group-hover:ring-cyan-400 group-hover:scale-110"
+              src={`${IMAGE_URL}/img/formateurs/${f?.form_photo}`}
+              alt="Formateur"
+              title="Formateur"
+            />
+            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full ring-2 ring-white flex items-center justify-center">
+              <svg
+                className="w-2 h-2 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </div>
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          type="formateur"
-          title="Aucun formateur assigné"
-          actionText="Cliquez pour en ajouter un"
-        />
-      )}
+            <div className="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-cyan-500/20 group-hover:opacity-100"></div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <EmptyState
+        type="formateur"
+        title="Aucun formateur assigné"
+        actionText="Cliquez pour en ajouter un"
+      />
+    )}
   </div>
 );
 
@@ -399,7 +397,7 @@ const EmptyState = ({ type, title, actionText }) => {
       case "entreprise":
         return (
           <svg
-            className="w-6 h-6 text-amber-400 group-hover/empty:scale-110 transition-transform duration-300"
+            className="w-6 h-6 transition-transform duration-300 text-amber-400 group-hover/empty:scale-110"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -415,7 +413,7 @@ const EmptyState = ({ type, title, actionText }) => {
       case "formateur":
         return (
           <svg
-            className="w-5 h-5 text-amber-400 group-hover/empty:scale-110 transition-transform duration-300"
+            className="w-5 h-5 transition-transform duration-300 text-amber-400 group-hover/empty:scale-110"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -436,26 +434,25 @@ const EmptyState = ({ type, title, actionText }) => {
   return (
     <div className="relative group/empty" title={title}>
       <div
-        className={`relative flex items-center justify-center ${
-          type === "entreprise" ? "h-[35px] w-[60px]" : "w-10 h-10"
-        } rounded-xl ring-2 ring-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 shadow-md group-hover/empty:ring-amber-300 group-hover/empty:shadow-lg transition-all duration-300`}
+        className={`relative flex items-center justify-center ${type === "entreprise" ? "h-[35px] w-[60px]" : "w-10 h-10"
+          } rounded-xl ring-2 ring-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 shadow-md group-hover/empty:ring-amber-300 group-hover/empty:shadow-lg transition-all duration-300`}
       >
         {getIcon()}
-        <div className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 bg-amber-500 rounded-full shadow-lg ring-2 ring-white">
+        <div className="absolute flex items-center justify-center w-5 h-5 rounded-full shadow-lg -top-1 -right-1 bg-amber-500 ring-2 ring-white">
           <FaTriangleExclamation
             className="text-[10px] text-white animate-pulse"
             aria-hidden="true"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/empty:translate-x-full transition-transform duration-700 rounded-xl"></div>
+        <div className="absolute inset-0 transition-transform duration-700 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/empty:translate-x-full rounded-xl"></div>
       </div>
 
-      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/empty:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none z-20 shadow-xl">
+      <div className="absolute z-20 px-3 py-2 mb-2 text-xs text-white transition-opacity duration-300 transform -translate-x-1/2 bg-gray-900 rounded-lg shadow-xl opacity-0 pointer-events-none bottom-full left-1/2 group-hover/empty:opacity-100 whitespace-nowrap">
         <div className="font-semibold mb-0.5">{title}</div>
         {actionText && (
           <div className="text-[10px] text-gray-300">{actionText}</div>
         )}
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+        <div className="absolute -mt-1 transform -translate-x-1/2 border-4 border-transparent top-full left-1/2 border-t-gray-900"></div>
       </div>
     </div>
   );
@@ -465,31 +462,31 @@ const ResourcesSection = ({ project, onActionClick }) => (
   <div className="flex items-center justify-between mb-4">
     <FormateurSection project={project} onActionClick={onActionClick} />
     <div className="flex items-center gap-5">
-        <ResourceItem
-          icon={Clock}
-          value={project.totalSessionHour}
-          label="Hrs"
-          color="blue"
-          onClick={() => onActionClick.handleShowHeures(project.idProjet)}
-          title="Heure"
-        />
-        <ResourceItem
-          icon={CalendarCheck}
-          value={project.seanceCount}
-          label="Ses"
-          color="green"
-          onClick={() => onActionClick.handleShowHeures(project.idProjet)}
-          title="Séance"
-        />
-        <ResourceItem
-          icon={FileText}
-          value={project.nbDocument}
-          label="Docs"
-          color="purple"
-          onClick={() => onActionClick.handleShowDocument(project.idProjet)}
-          title="Documents"
-        />
-      </div>
+      <ResourceItem
+        icon={Clock}
+        value={project.totalSessionHour}
+        label="Hrs"
+        color="blue"
+        onClick={() => onActionClick.handleShowHeures(project.idProjet)}
+        title="Heure"
+      />
+      <ResourceItem
+        icon={CalendarCheck}
+        value={project.seanceCount}
+        label="Ses"
+        color="green"
+        onClick={() => onActionClick.handleShowHeures(project.idProjet)}
+        title="Séance"
+      />
+      <ResourceItem
+        icon={FileText}
+        value={project.nbDocument}
+        label="Docs"
+        color="purple"
+        onClick={() => onActionClick.handleShowDocument(project.idProjet)}
+        title="Documents"
+      />
+    </div>
   </div>
 );
 
@@ -515,7 +512,7 @@ const ResourceItem = ({ icon: Icon, value, label, color, onClick, title }) => {
 };
 
 const ProjectFooter = ({ project, setting }) => (
-  <div className="grid grid-cols-4 divide-x divide-slate-200 text-sm text-slate-600">
+  <div className="grid grid-cols-4 text-sm divide-x divide-slate-200 text-slate-600">
     <DateSection project={project} />
     <PriceSection project={project} setting={setting} />
     <PaymentSection project={project} />
@@ -523,7 +520,7 @@ const ProjectFooter = ({ project, setting }) => (
 );
 
 const DateSection = ({ project }) => (
-  <div className="grid grid-cols-2 col-span-2 pl-1 gap-2">
+  <div className="grid grid-cols-2 col-span-2 gap-2 pl-1">
     <DateItem
       icon={Calendar}
       dateDebut={project.dateDebut}
@@ -537,21 +534,21 @@ const DateItem = ({ icon: Icon, dateDebut, dateFin, color }) => (
   <div className="flex items-center gap-2">
     {Icon && <Icon className={`w-4 h-4 text-${color}-500`} />}
     <div>
-      <p className="font-semibold text-slate-700 flex items-center gap-2">
+      <p className="flex items-center gap-2 font-semibold text-slate-700">
         {dateDebut
           ? new Date(dateDebut).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
           : "Non définie"}
         <span className="text-slate-400">→</span>
         {dateFin
           ? new Date(dateFin).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
           : "Non définie"}
       </p>
     </div>
@@ -559,7 +556,7 @@ const DateItem = ({ icon: Icon, dateDebut, dateFin, color }) => (
 );
 
 const PriceSection = ({ project, setting }) => (
-  <div className="pl-3 flex items-center gap-2">
+  <div className="flex items-center gap-2 pl-3">
     <DollarSign className="w-4 h-4 text-green-500" />
     <div>
       <h5 className="text-xs text-slate-400">Prix HT</h5>
@@ -572,7 +569,7 @@ const PriceSection = ({ project, setting }) => (
 );
 
 const PaymentSection = ({ project }) => (
-  <div className="pl-3 flex items-center gap-2">
+  <div className="flex items-center gap-2 pl-3">
     <CreditCard className="w-4 h-4 text-purple-500" />
     <span className="px-3 py-1 text-xs rounded-xl text-slate-700 bg-slate-100">
       {project?.invoice?.[0]?.invoice_status_name || "Non envoyé"}

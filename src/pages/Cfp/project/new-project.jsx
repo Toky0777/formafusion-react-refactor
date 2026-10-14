@@ -97,37 +97,36 @@ const NewProject = () => {
 
   if (loading)
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center h-screen">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
 
   return (
     <div className="p-10">
-      <h1 className="text-3xl font-bold mb-6">Création de nouveau projet</h1>
+      <h1 className="mb-6 text-3xl font-bold">Création de nouveau projet</h1>
 
       {successMessage && (
-        <div className="p-4 bg-green-100 border border-green-300 rounded-lg text-green-800 mb-6">
+        <div className="p-4 mb-6 text-green-800 bg-green-100 border border-green-300 rounded-lg">
           {successMessage}
         </div>
       )}
 
       {/* Stepper */}
       <div className="relative mb-10">
-        <div className="absolute inset-0 top-4 h-1 bg-gray-200 rounded-full"></div>
+        <div className="absolute inset-0 h-1 bg-gray-200 rounded-full top-4"></div>
         <div
-          className="absolute inset-0 top-4 h-1 bg-blue-600 rounded-full transition-all duration-500"
+          className="absolute inset-0 h-1 transition-all duration-500 bg-blue-600 rounded-full top-4"
           style={{ width: `${(currentStep / totalSteps) * 100}%` }}
         ></div>
-        <div className="flex justify-between relative z-10">
+        <div className="relative z-10 flex justify-between">
           {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
             <div
               key={step}
-              className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-all duration-300 ${
-                currentStep >= step
+              className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-all duration-300 ${currentStep >= step
                   ? "bg-blue-600 text-white border-blue-600"
                   : "bg-white border-gray-300 text-gray-500"
-              }`}
+                }`}
             >
               {currentStep > step ? <Check size={18} /> : step}
             </div>
@@ -137,25 +136,24 @@ const NewProject = () => {
 
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="bg-white shadow rounded-xl p-8 overflow-hidden"
+        className="p-8 overflow-hidden bg-white shadow rounded-xl"
       >
         {currentStep === 1 && (
           <div className="space-y-3">
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="mb-4 text-xl font-semibold">
               Choisir le type de projet
             </h2>
             {[
-              { label: "Projet inter entreprise", value: "Inter" },
               { label: "Projet intra entreprise", value: "Intra" },
+              { label: "Projet inter entreprise", value: "Inter" },
               { label: "Projet particulier", value: "Individual" },
             ].map((t) => (
               <label
                 key={t.value}
-                className={`p-4 border rounded-lg flex items-center gap-3 cursor-pointer transition ${
-                  formData.project_type === t.value
+                className={`p-4 border rounded-lg flex items-center gap-3 cursor-pointer transition ${formData.project_type === t.value
                     ? "border-blue-600 bg-blue-50"
                     : "border-gray-300 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 <input
                   type="radio"
@@ -188,7 +186,7 @@ const NewProject = () => {
                 setFormData({ ...formData, title: e.target.value })
               }
               placeholder="Titre du projet"
-              className="w-full border p-3 rounded-lg"
+              className="w-full p-3 border rounded-lg"
             />
             <textarea
               value={formData.description}
@@ -197,7 +195,7 @@ const NewProject = () => {
               }
               placeholder="Description de projet"
               rows={4}
-              className="w-full border p-3 rounded-lg"
+              className="w-full p-3 border rounded-lg"
             />
           </div>
         )}
@@ -276,57 +274,57 @@ const NewProject = () => {
         {/* Modality & Dates */}
         {((formData.project_type === "Individual" && currentStep === 5) ||
           (formData.project_type !== "Individual" && currentStep === 7)) && (
-          <>
-            <h2 className="text-xl font-semibold mb-4">Modalité et dates</h2>
-            <select
-              value={formData.modality}
-              onChange={(e) =>
-                setFormData({ ...formData, modality: e.target.value })
-              }
-              className="w-full border p-3 rounded-lg mb-4"
-            >
-              <option value="">Selectionner la modalité</option>
-              <option value="1">Présentielle</option>
-              <option value="2">En ligne</option>
-              <option value="3">Blended</option>
-            </select>
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="date"
-                className="border p-3 rounded-lg"
-                value={formData.date_begin}
+            <>
+              <h2 className="mb-4 text-xl font-semibold">Modalité et dates</h2>
+              <select
+                value={formData.modality}
                 onChange={(e) =>
-                  setFormData({ ...formData, date_begin: e.target.value })
+                  setFormData({ ...formData, modality: e.target.value })
                 }
-              />
-              <input
-                type="date"
-                className="border p-3 rounded-lg"
-                value={formData.date_end}
-                onChange={(e) =>
-                  setFormData({ ...formData, date_end: e.target.value })
-                }
-              />
-            </div>
+                className="w-full p-3 mb-4 border rounded-lg"
+              >
+                <option value="">Selectionner la modalité</option>
+                <option value="1">Présentielle</option>
+                <option value="2">En ligne</option>
+                <option value="3">Blended</option>
+              </select>
+              <div className="grid grid-cols-2 gap-4">
+                <input
+                  type="date"
+                  className="p-3 border rounded-lg"
+                  value={formData.date_begin}
+                  onChange={(e) =>
+                    setFormData({ ...formData, date_begin: e.target.value })
+                  }
+                />
+                <input
+                  type="date"
+                  className="p-3 border rounded-lg"
+                  value={formData.date_end}
+                  onChange={(e) =>
+                    setFormData({ ...formData, date_end: e.target.value })
+                  }
+                />
+              </div>
 
-            <button
-              type="button"
-              onClick={handleSubmitProject}
-              disabled={submitting || !canProceed()}
-              className="mt-6 w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition disabled:opacity-50"
-            >
-              {submitting ? "Creation de votre projet..." : "Créer"}
-            </button>
-          </>
-        )}
+              <button
+                type="button"
+                onClick={handleSubmitProject}
+                disabled={submitting || !canProceed()}
+                className="w-full py-3 mt-6 text-white transition bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50"
+              >
+                {submitting ? "Creation de votre projet..." : "Créer"}
+              </button>
+            </>
+          )}
 
         {/* Navigation */}
         {currentStep < totalSteps && (
-          <div className="sticky bottom-0 bg-white p-4 border-t flex justify-between border-gray-200">
+          <div className="sticky bottom-0 flex justify-between p-4 bg-white border-t border-gray-200">
             <button
               type="button"
               disabled={currentStep === 1}
-              className="flex items-center gap-2 bg-gray-100 px-5 py-2 rounded-lg hover:bg-gray-200 disabled:opacity-50 transition"
+              className="flex items-center gap-2 px-5 py-2 transition bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50"
               onClick={() => setCurrentStep(currentStep - 1)}
             >
               <ChevronLeft /> Retour
@@ -335,7 +333,7 @@ const NewProject = () => {
             <button
               type="button"
               disabled={!canProceed()}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg disabled:opacity-50 hover:bg-blue-700 transition"
+              className="flex items-center gap-2 px-6 py-2 text-white transition bg-blue-600 rounded-lg disabled:opacity-50 hover:bg-blue-700"
               onClick={() => setCurrentStep(currentStep + 1)}
             >
               Suivant <ChevronRight />
