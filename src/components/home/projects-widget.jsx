@@ -114,7 +114,7 @@ export function ProjectsWidget({ data, basePath = "cfp", handleShowProject }) {
                     </div>
                   </div>
                   <div className="flex justify-end mt-3">
-                    <Link to={`/${basePath}/projet/detail/${project.idProjet}`}>
+                    <Link to={`/${basePath}/projects/detail/${project.idProjet}`}>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -242,7 +242,7 @@ export function ProjectsWidgetEtp({ data, basePath = "cfp" }) {
           <div className="space-y-4">
             {projetsEnCours.length > 0 ? (
               projetsEnCours.map((projet) => (
-                <Link to={`/${basePath}/projet/detail/${projet.idProjet}`}>
+                <Link to={`/${basePath}/projects/detail/${projet.idProjet}`}>
                   <div
                     key={projet.idProjet || projet.id}
                     className="p-4 mt-4 space-y-3 transition-colors bg-gray-100 border rounded-lg hover:bg-muted/50"
@@ -308,7 +308,7 @@ export function ProjectsWidgetEtp({ data, basePath = "cfp" }) {
           <div className="space-y-4">
             {recentProjetsTermines.length > 0 ? (
               recentProjetsTermines.map((projet) => (
-                <Link to={`/${basePath}/projet/detail/${projet.idProjet}`}>
+                <Link to={`/${basePath}/projects/detail/${projet.idProjet}`}>
                   <div
                     key={projet.idProjet || projet.id}
                     className="p-4 mt-4 space-y-3 transition-colors bg-gray-100 border rounded-lg hover:bg-muted/50"
