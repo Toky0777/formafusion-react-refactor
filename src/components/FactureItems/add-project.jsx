@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useApi from "../../hooks/Api";
 
 export function AddProject({
@@ -9,9 +9,49 @@ export function AddProject({
   setSumProject,
   isEdit,
 }) {
-  const { data, callApi } = useApi();
+  const { callApi } = useApi();
+  const [projets, setProjets] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    callApi(`/cfp/factures/projects/${clientId}`);
+    if (clientId == null || clientId === "") {
+      setProjets([]);
+      setError(null);
+      return;
+    }
+
+    let cancelled = false;
+    const fetchProjets = async () => {
+      setLoading(true);
+      setError(null);
+      setProjets([]);
+
+      try {
+        const response = await callApi(`/cfp/factures/projects/${clientId}`);
+        if (!Array.isArray(response)) {
+          throw new Error("Format de réponse invalide lors du chargement des projets.");
+        }
+        if (!cancelled) setProjets(response);
+      } catch (err) {
+        console.error("Erreur lors du chargement des projets de la facture :", err);
+        if (!cancelled) {
+          const status = err.response?.status;
+          setError(
+            status
+              ? `Impossible de charger les projets (erreur HTTP ${status}).`
+              : err.message || "Impossible de charger les projets."
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchProjets();
+    return () => {
+      cancelled = true;
+    };
   }, [clientId, callApi]);
 
   const calculerSommeTotale = (arr) =>
@@ -43,6 +83,20 @@ export function AddProject({
   };
   return (
     <>
+      {loading && (
+        <tr>
+          <td colSpan="7" className="px-4 py-2 text-sm text-gray-500">
+            Chargement des projets...
+          </td>
+        </tr>
+      )}
+      {error && (
+        <tr>
+          <td colSpan="7" className="px-4 py-2 text-sm text-red-600" role="alert">
+            {error}
+          </td>
+        </tr>
+      )}
       {items.map((item, index) => (
         <tr key={index} className="border-b bg-slate-50 item-row">
           <td className="px-4 text-sm text-gray-700">
@@ -61,7 +115,7 @@ export function AddProject({
                   name={`items[${item.id}][idProjet]`}
                 >
                   <option value="">Sélectionner un projet</option>
-                  {data?.map((projet) => (
+                  {projets.map((projet) => (
                     <option key={projet.idProjet} value={projet.idProjet}>
                       {projet.module_name} |{" "}
                       {projet.project_reference ?? "Référence inconnue"} |{" "}

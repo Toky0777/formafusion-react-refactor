@@ -25,7 +25,7 @@ import { projectService } from "../../../services/projectService";
 import axios from "../../../config/axios";
 import { IMAGE_URL } from "../../../config/env";
 
-export const TrainerSection = ({ id, formateur }) => {
+export const TrainerSection = ({ id, formateur, onTrainersChange }) => {
   const [cvForm, setCvForm] = useState([]);
   const [allTrainer, setAllTrainer] = useState([]);
   const [trainerAdded, setTrainerAdded] = useState([]);
@@ -70,7 +70,8 @@ export const TrainerSection = ({ id, formateur }) => {
       try {
         await axios.delete(`/cfp/projets/${id}/${idFormateur}/form/assign`);
 
-        await fetchTrainerAdded(id);
+        const trainers = await fetchTrainerAdded(id);
+        onTrainersChange?.(trainers);
       } catch (error) {
         console.error("Erreur suppression formateur:", error);
       }
@@ -79,7 +80,8 @@ export const TrainerSection = ({ id, formateur }) => {
     if (method === "post") {
       try {
         await axios.post(`/cfp/projets/${id}/${idFormateur}/form/assign`);
-        await fetchTrainerAdded(id);
+        const trainers = await fetchTrainerAdded(id);
+        onTrainersChange?.(trainers);
       } catch (error) {
         console.error("Erreur de l'ajout de  formateur:", error);
       }
@@ -95,22 +97,24 @@ export const TrainerSection = ({ id, formateur }) => {
     const fetchData = async () => {
       if (!showPageFormateur) return;
 
-      await Promise.all([fetchTrainer(), fetchTrainerAdded(id)]);
-
-      setLoading(false);
+      try {
+        await Promise.all([fetchTrainer(), fetchTrainerAdded(id)]);
+      } catch (error) {
+        console.error("Erreur lors du chargement des formateurs :", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, [showPageFormateur]);
+  }, [showPageFormateur, id]);
 
   const fetchTrainerAdded = async (id) => {
-    try {
-      const { data } = await axios.get(`/cfp/projets/${id}/getFormAdded`);
+    const { data } = await axios.get(`/cfp/projets/${id}/getFormAdded`);
 
-      setTrainerAdded(data.forms || []);
-    } catch (error) {
-      console.error("Erreur dans fetchFormateurProjet :", error);
-    }
+    const trainers = data.forms || [];
+    setTrainerAdded(trainers);
+    return trainers;
   };
 
   const getInitials = (firstName, lastName) => {

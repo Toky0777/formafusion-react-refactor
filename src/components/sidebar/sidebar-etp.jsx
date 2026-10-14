@@ -161,6 +161,7 @@ export function NavigationSidebarEtp() {
         },
         // { name: "Devis", icon: ReceiptText, href: "/etp/proforma" },
         { name: "Vos bon de commande", icon: Signature, href: "/etp/bon-commande" },
+        { name: "Factures", icon: FileText, href: "/etp/facture" },
         { name: "Photos", icon: Camera, href: "/etp/photos" },
       ],
     },

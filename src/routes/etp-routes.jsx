@@ -87,6 +87,12 @@ const FmfpIndexEtp = lazyPage(() => import("../pages/Etp/Fmfp"));
 const ListeBonCommandeEtp = lazyPage(() =>
   import("../pages/Etp/bon_commande").then((m) => ({ default: m.ListeBonCommandeEtp }))
 );
+const ListeFactureEtp = lazyPage(() =>
+  import("../pages/Etp/facture").then((m) => ({ default: m.ListeFactureEtp }))
+);
+const DetailFactureEtp = lazyPage(() =>
+  import("../pages/Etp/facture/detail").then((m) => ({ default: m.DetailFactureEtp }))
+);
 
 const etpRoutes = {
   path: "/etp",
@@ -319,6 +325,14 @@ const etpRoutes = {
     {
       path: "bon-commande",
       element: <ListeBonCommandeEtp />,
+    },
+    {
+      path: "facture",
+      element: <ListeFactureEtp />,
+    },
+    {
+      path: "facture/details/:invoiceId",
+      element: <DetailFactureEtp />,
     },
     // {
     //   path: "bon-commande/view/:id",

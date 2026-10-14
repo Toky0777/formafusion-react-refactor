@@ -44,7 +44,6 @@ export function ListeBonCommandeEtp() {
     handleEdit,
     handleDelete,
     handleDrawerClose,
-    handleNewClick,
 
     // Functions
     fetchBons,
@@ -85,7 +84,7 @@ export function ListeBonCommandeEtp() {
         onPreview={previewDocument}
       />
 
-      <BonCommandeHeaderETP onNewClick={handleNewClick} />
+      <BonCommandeHeaderETP />
 
       <BonCommandeDashboardETP totals={totals} />
 

@@ -89,6 +89,18 @@ export function NavigationSidebar() {
     fetchCounts();
   }, []);
 
+  const categoryOrder = [
+    "Formation & Contenu",
+    "Gestion des Utilisateurs",
+    "Suivi & Présence",
+    "Gestion Administrative",
+    "Évaluations",
+    "Business Intelligence",
+    "Dossier Fmfp",
+    "Marketplace",
+    "Aide",
+  ];
+
   const moduleCategories = [
     {
       title: "Marketplace",
@@ -398,7 +410,13 @@ export function NavigationSidebar() {
         },
       ],
     },
-  ];
+  ].sort((first, second) => {
+    const firstIndex = categoryOrder.indexOf(first.title);
+    const secondIndex = categoryOrder.indexOf(second.title);
+    const firstOrder = firstIndex === -1 ? categoryOrder.length : firstIndex;
+    const secondOrder = secondIndex === -1 ? categoryOrder.length : secondIndex;
+    return firstOrder - secondOrder;
+  });
 
   useEffect(() => {
     setCollapsedCategories(moduleCategories.map(() => true));

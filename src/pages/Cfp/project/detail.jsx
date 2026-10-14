@@ -10,9 +10,6 @@ import {
   FaArrowRight,
   FaCalendarDay,
   FaBuilding,
-  FaChalkboard,
-  FaBullseye,
-  FaBoxOpen,
   FaTrashCan,
   FaCopy,
   FaCircleXmark,
@@ -62,13 +59,11 @@ const ProjectDetail = () => {
   const [tousModalites, setTousModalites] = useState([]);
   const [bc, setBonCommand] = useState([]);
   const [tousDossier, setTousDossier] = useState({ dossiers: [] });
-  const [tousProgram, setTousProgram] = useState([]);
   const [etp, setEtp] = useState([]);
   const [formateur, setFormateur] = useState([]);
   const [projet, setProjet] = useState({ projet: {} });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("vue-ensemble");
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
   const [showPageAgenda, setShowPageAgenda] = useState(false);
@@ -243,17 +238,6 @@ const ProjectDetail = () => {
         "❌ Erreur lors de la récupération des dossiers et documents :",
         error
       );
-    }
-  };
-
-  const fetchProgramProjet = async (idModule) => {
-    try {
-      const [programRes] = await Promise.all([
-        axios.get(`/cfp/projets/${idModule}/getProgrammeProject`),
-      ]);
-      setTousProgram(programRes.data || []);
-    } catch (err) {
-      console.error("Erreur lors du chargement des programes :", error);
     }
   };
 
@@ -705,14 +689,6 @@ const ProjectDetail = () => {
     }
   }, [projet]);
 
-  const filteredMateriels = projet?.materiels
-    ? projet.materiels.filter((m) => m.idModule === idModule)
-    : [];
-
-  const filteredObjectifs = projet?.objectifs
-    ? projet.objectifs.filter((o) => o.idModule === idModule)
-    : [];
-
   const annulerProjet = async (id) => {
     setShowConfirmAnnuler(false);
     try {
@@ -916,12 +892,6 @@ const ProjectDetail = () => {
       fetchSeanceProjet(id);
     }
   }, [id]);
-
-  useEffect(() => {
-    if (idModule) {
-      fetchProgramProjet(idModule);
-    }
-  }, [idModule]);
 
   const handlePreview = async (idDocument) => {
     try {
@@ -2371,40 +2341,8 @@ const ProjectDetail = () => {
             </div>
           </div>
 
-          {/* Onglets */}
           <div className="w-full">
-            {/* Onglet 1 - Vue d'ensemble */}
-            <div
-              role="tablist"
-              aria-label="Sections du projet"
-              className="sticky top-[4.5rem] z-10 mb-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm"
-            >
-              <button
-                role="tab"
-                aria-selected={activeTab === "vue-ensemble"}
-                onClick={() => setActiveTab("vue-ensemble")}
-                className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${activeTab === "vue-ensemble"
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100"
-                  }`}
-              >
-                Vue d'ensemble
-              </button>
-              <button
-                role="tab"
-                aria-selected={activeTab === "detail-formation"}
-                onClick={() => setActiveTab("detail-formation")}
-                className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${activeTab === "detail-formation"
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100"
-                  }`}
-              >
-                Détail de la formation
-              </button>
-            </div>
-
-            <div role="tabpanel" className="tab-content min-w-0">
-              {activeTab === "vue-ensemble" && (
+            <div className="tab-content min-w-0">
                 <div className="flex w-full flex-col gap-4 xl:flex-row">
                   {/* Colonne gauche */}
                   <div className="w-full xl:w-[60%]">
@@ -2693,236 +2631,14 @@ const ProjectDetail = () => {
                     )}
 
                     {/* Formateurs */}
-                    <TrainerSection formateur={formateur} id={id} />
+                    <TrainerSection
+                      formateur={formateur}
+                      id={id}
+                      onTrainersChange={setFormateur}
+                    />
                   </div>
                 </div>
-              )}
 
-              {activeTab === "detail-formation" && (
-                <div className="flex gap-6">
-                  {/* Colonne gauche - Programme de formation */}
-                  <div className="w-full lg:w-2/3">
-                    <div className="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
-                      {/* Header de section */}
-                      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center w-10 h-10 rounded-lg shadow-md bg-gradient-to-r from-gray-50 to-gray-100">
-                            <FaChalkboard className="text-lg text-gray-600" />
-                          </div>
-                          <div>
-                            <h2 className="text-xl font-bold text-gray-900">
-                              Programme de formation
-                            </h2>
-                            <p className="mt-1 text-sm text-gray-700">
-                              Contenu détaillé du cours
-                            </p>
-                          </div>
-                          <div className="px-3 py-1 ml-auto text-sm font-medium text-gray-800 bg-gray-200 rounded-full">
-                            {tousProgram?.programmes?.length || 0} modules
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Contenu du programme */}
-                      <div className="p-6">
-                        {tousProgram?.programmes?.length > 0 ? (
-                          <div className="space-y-6">
-                            {tousProgram.programmes.map((p, i) => (
-                              <div
-                                key={i}
-                                className="p-6 transition-all duration-300 border border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:shadow-md"
-                              >
-                                {/* Numéro et titre du module */}
-                                <div className="flex items-start gap-4 mb-4">
-                                  <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full shadow-sm bg-gradient-to-r from-gray-50 to-gray-300">
-                                    <span className="text-sm font-bold text-gray-600">
-                                      {i + 1}
-                                    </span>
-                                  </div>
-                                  <div className="flex-1">
-                                    <h3 className="mb-2 text-lg font-semibold text-gray-800">
-                                      {p.program_title}
-                                    </h3>
-                                    {/* Description avec HTML */}
-                                    <div
-                                      className="leading-relaxed prose-sm prose text-gray-600 max-w-none"
-                                      dangerouslySetInnerHTML={{
-                                        __html: p.program_description,
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-
-                                {/* Ligne de progression */}
-                                {i < tousProgram.programmes.length - 1 && (
-                                  <div className="flex justify-center mt-6">
-                                    <div className="w-px h-8 bg-gradient-to-b from-blue-300 to-transparent"></div>
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          /* État vide */
-                          <div className="py-16 text-center">
-                            <div className="flex items-center justify-center w-20 h-20 mx-auto mb-6 rounded-full shadow-inner bg-gradient-to-br from-gray-100 to-gray-200">
-                              <FaChalkboard className="text-2xl text-gray-400" />
-                            </div>
-                            <h3 className="mb-2 text-lg font-medium text-gray-600">
-                              Aucun programme disponible
-                            </h3>
-                            <p className="max-w-sm mx-auto text-gray-500">
-                              Le programme de ce cours n'a pas encore été
-                              défini.
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Colonne droite */}
-                  <div className="w-full space-y-6 lg:w-1/3">
-                    {/* Objectifs de la formation */}
-                    <div className="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
-                      {/* Header */}
-                      <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center w-8 h-8 rounded-lg shadow-sm bg-gradient-to-r from-gray-50 to-gray-100 to-emerald-600">
-                            <FaBullseye className="text-sm text-gray-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              Objectifs
-                            </h3>
-                            <p className="text-xs text-gray-700">
-                              Compétences visées
-                            </p>
-                          </div>
-                          <div className="px-2 py-1 ml-auto text-xs font-medium text-gray-800 bg-gray-200 rounded-full">
-                            {Array.isArray(filteredObjectifs)
-                              ? filteredObjectifs.length
-                              : 0}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Contenu des objectifs */}
-                      <div className="p-4">
-                        {Array.isArray(filteredObjectifs) &&
-                          filteredObjectifs.length > 0 ? (
-                          <ul className="space-y-3">
-                            {filteredObjectifs.map((objectif, i) => (
-                              <li key={i} className="flex items-start gap-3">
-                                <div className="flex-shrink-0 w-2 h-2 mt-2 bg-gray-800 rounded-full"></div>
-                                <span className="text-sm leading-relaxed text-gray-700">
-                                  {objectif.objectif}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          /* État vide */
-                          <div className="py-8 text-center">
-                            <div className="flex items-center justify-center w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full">
-                              <FaBullseye className="text-lg text-gray-400" />
-                            </div>
-                            <p className="text-sm text-gray-500">
-                              Aucun objectif défini
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Matériels utiles */}
-                    <div className="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
-                      {/* Header */}
-                      <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center w-8 h-8 rounded-lg shadow-sm bg-gradient-to-r from-gray-50 to-gray-100">
-                            <FaBoxOpen className="text-sm text-gray-800" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              Matériels
-                            </h3>
-                            <p className="text-xs text-gray-700">
-                              Équipements requis
-                            </p>
-                          </div>
-                          <div className="px-2 py-1 ml-auto text-xs font-medium text-gray-800 bg-gray-200 rounded-full">
-                            {Array.isArray(filteredMateriels)
-                              ? filteredMateriels.length
-                              : 0}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Contenu des matériels */}
-                      <div className="p-4">
-                        {Array.isArray(filteredMateriels) &&
-                          filteredMateriels.length > 0 ? (
-                          <ul className="space-y-3">
-                            {filteredMateriels.map((materiel, index) => (
-                              <li
-                                key={index}
-                                className="flex items-center gap-3 p-2 border border-gray-100 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 to-white"
-                              >
-                                <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100">
-                                  <FaBoxOpen className="text-xs text-gray-700" />
-                                </div>
-                                <span className="text-sm font-medium text-gray-700">
-                                  {materiel.prestation_name}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          /* État vide */
-                          <div className="py-8 text-center">
-                            <div className="flex items-center justify-center w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full">
-                              <FaBoxOpen className="text-lg text-gray-400" />
-                            </div>
-                            <p className="text-sm text-gray-500">
-                              Aucun matériel requis
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Card d'information supplémentaire */}
-                    <div className="p-4 border border-purple-200 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="flex items-center justify-center w-8 h-8 bg-gray-500 rounded-lg">
-                          <svg
-                            className="w-4 h-4 text-gray-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </div>
-                        <h4 className="font-semibold text-gray-900">
-                          Information
-                        </h4>
-                      </div>
-                      <p className="text-sm leading-relaxed text-gray-800">
-                        Cette formation est conçue pour répondre aux besoins
-                        spécifiques de votre organisation. N'hésitez pas à nous
-                        contacter pour toute adaptation du contenu.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
