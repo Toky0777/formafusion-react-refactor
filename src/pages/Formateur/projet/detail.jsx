@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   FaBuilding,
   FaUsers,
@@ -6,11 +6,13 @@ import {
   FaChevronDown,
   FaAward,
   FaStar,
+  FaPlus,
+  FaXmark,
 } from "react-icons/fa6";
 import { Link, useParams } from 'react-router-dom';
 import axios from '../../../config/axios';
 import LoadingSpinner from '../../../components/ui/loading-spinner';
-import { AlertTriangle, ArrowRight, Award, BarChart3, BookOpen, Calendar, CalendarDays, CheckCircle, Clock, Download, FileText, Laptop, Monitor, Package, ShoppingCart, Target, UserCheck, Users, Wrench } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Award, BarChart3, BookOpen, Calendar, CalendarDays, CheckCircle, Clock, Download, FileText, Laptop, Monitor, Package, Plus, Search, ShoppingCart, Target, UserCheck, Users, Wrench, X } from 'lucide-react';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import MediaUploadForm from './MediaUploadForm';
 import { API_URL, IMAGE_URL } from "../../../config/env";
@@ -24,6 +26,20 @@ const ProjetDetailForm = () => {
   const [idEtp, setIdEtp] = useState([]);
   const [idModule, setIdModule] = useState(null);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [showLearnerManager, setShowLearnerManager] = useState(false);
+  const [availableLearners, setAvailableLearners] = useState([]);
+  const [assignedLearners, setAssignedLearners] = useState([]);
+  const [learnerCompanies, setLearnerCompanies] = useState([]);
+  const [selectedLearnerCompany, setSelectedLearnerCompany] = useState("");
+  const [learnerSearch, setLearnerSearch] = useState("");
+  const [learnerManagerLoading, setLearnerManagerLoading] = useState(false);
+  const [learnerActionError, setLearnerActionError] = useState("");
+  const [showTrainerManager, setShowTrainerManager] = useState(false);
+  const [availableTrainers, setAvailableTrainers] = useState([]);
+  const [assignedTrainers, setAssignedTrainers] = useState([]);
+  const [trainerSearch, setTrainerSearch] = useState("");
+  const [trainerManagerLoading, setTrainerManagerLoading] = useState(false);
+  const [trainerActionError, setTrainerActionError] = useState("");
 
 
   console.log("IdProjet", projet.projet?.idProjet);
@@ -32,14 +48,15 @@ const ProjetDetailForm = () => {
   const note = parseFloat(projet?.noteGeneral) || 0;
   const avis = projet?.countNotationProjet || 0;
 
-  const fetchProjectDetails = async (id) => {
-    setLoading(true);
+  const fetchProjectDetails = async (id, showLoading = true) => {
+    if (showLoading) setLoading(true);
     try {
       // 1. Récupération du projet
       const response = await axios.get(`${API_URL}/projetsForm/${id}/detailForm`);
 
       const data = await response.data;
       setProjets(data);
+      setAssignedLearners(data.apprs || []);
 
 
       const idEtp = data.projet.idEtp;
@@ -49,14 +66,138 @@ const ProjetDetailForm = () => {
       setIdModule(idModule);
 
       console.log(idModule);
-
-
     } catch (error) {
       console.error("Détails de l'erreur :", error);
-      setLoading(false);
       setError("Impossible de charger le projet. Veuillez réessayer.");
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
+    }
+  };
+
+  const fetchAssignedLearners = useCallback(async (projectId = id) => {
+    const { data } = await axios.get(
+      `/cfp/projet/apprenants/added/${projectId}`
+    );
+    const learners = data.apprs || [];
+    setAssignedLearners(learners);
+    return learners;
+  }, [id]);
+
+  const fetchLearnerManagerData = useCallback(async () => {
+    setLearnerManagerLoading(true);
+    setLearnerActionError("");
+    try {
+      const [companiesResponse, learnersResponse] = await Promise.all([
+        axios.get(`/cfp/projet/etpInter/getEtpAdded/${id}`),
+        axios.get(`/cfp/projet/apprenants/added/${id}`),
+      ]);
+      const companies = companiesResponse.data.etps || [];
+      setLearnerCompanies(companies);
+      setAssignedLearners(learnersResponse.data.apprs || []);
+      setSelectedLearnerCompany((current) =>
+        companies.some((company) => String(company.idEtp) === current)
+          ? current
+          : String(companies[0]?.idEtp || "")
+      );
+    } catch (error) {
+      console.error("Erreur lors du chargement des apprenants :", error);
+      setLearnerActionError(
+        "Impossible de charger les apprenants disponibles pour ce projet."
+      );
+    } finally {
+      setLearnerManagerLoading(false);
+    }
+  }, [id]);
+
+  const fetchAvailableLearners = useCallback(async (companyId) => {
+    if (!companyId) {
+      setAvailableLearners([]);
+      return;
+    }
+
+    setLearnerManagerLoading(true);
+    setLearnerActionError("");
+    try {
+      const { data } = await axios.get(
+        `/cfp/projet/apprenants/${companyId}`
+      );
+      setAvailableLearners(data.apprs || []);
+    } catch (error) {
+      console.error("Erreur lors du chargement des apprenants disponibles :", error);
+      setLearnerActionError(
+        "Impossible de charger les apprenants de cette entreprise."
+      );
+    } finally {
+      setLearnerManagerLoading(false);
+    }
+  }, []);
+
+  const fetchAssignedTrainers = useCallback(async (projectId = id) => {
+    const { data } = await axios.get(`/cfp/projets/${projectId}/getFormAdded`);
+    const trainers = data.forms || [];
+    setAssignedTrainers(trainers);
+    return trainers;
+  }, [id]);
+
+  const fetchTrainerManagerData = useCallback(async () => {
+    setTrainerManagerLoading(true);
+    setTrainerActionError("");
+    try {
+      const [availableResponse, assignedResponse] = await Promise.all([
+        axios.get("/cfp/projets/formateur/all"),
+        axios.get(`/cfp/projets/${id}/getFormAdded`),
+      ]);
+      setAvailableTrainers(availableResponse.data.forms || []);
+      setAssignedTrainers(assignedResponse.data.forms || []);
+    } catch (error) {
+      console.error("Erreur lors du chargement des formateurs :", error);
+      setTrainerActionError(
+        "Impossible de charger les formateurs disponibles pour ce projet."
+      );
+    } finally {
+      setTrainerManagerLoading(false);
+    }
+  }, [id]);
+
+  const manageLearner = async (method, employeeId) => {
+    setLearnerManagerLoading(true);
+    setLearnerActionError("");
+    try {
+      await axios({
+        method,
+        url: `/cfp/projet/apprenants/${id}/${employeeId}`,
+      });
+      await fetchProjectDetails(id, false);
+      await fetchAssignedLearners();
+      if (selectedLearnerCompany) {
+        await fetchAvailableLearners(selectedLearnerCompany);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des apprenants :", error);
+      setLearnerActionError(
+        "La mise à jour des apprenants a échoué. Veuillez réessayer."
+      );
+    } finally {
+      setLearnerManagerLoading(false);
+    }
+  };
+
+  const manageTrainer = async (method, trainerId) => {
+    setTrainerManagerLoading(true);
+    setTrainerActionError("");
+    try {
+      await axios({
+        method,
+        url: `/cfp/projets/${id}/${trainerId}/form/assign`,
+      });
+      await fetchAssignedTrainers();
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des formateurs :", error);
+      setTrainerActionError(
+        "La mise à jour des formateurs a échoué. Veuillez réessayer."
+      );
+    } finally {
+      setTrainerManagerLoading(false);
     }
   };
 
@@ -154,7 +295,60 @@ const ProjetDetailForm = () => {
 
   useEffect(() => {
     fetchProjectDetails(id);
-  }, [id]);
+    fetchAssignedLearners(id).catch((error) => {
+      console.error("Erreur lors du chargement des apprenants assignés :", error);
+    });
+    fetchAssignedTrainers(id).catch((error) => {
+      console.error("Erreur lors du chargement des formateurs assignés :", error);
+    });
+  }, [id, fetchAssignedLearners, fetchAssignedTrainers]);
+
+  useEffect(() => {
+    if (showLearnerManager) {
+      fetchLearnerManagerData();
+    }
+  }, [showLearnerManager, fetchLearnerManagerData]);
+
+  useEffect(() => {
+    if (showLearnerManager && selectedLearnerCompany) {
+      fetchAvailableLearners(selectedLearnerCompany);
+    }
+  }, [selectedLearnerCompany, showLearnerManager, fetchAvailableLearners]);
+
+  useEffect(() => {
+    if (showTrainerManager) {
+      fetchTrainerManagerData();
+    }
+  }, [showTrainerManager, fetchTrainerManagerData]);
+
+  const filteredAvailableLearners = availableLearners.filter((learner) => {
+    const search = learnerSearch.toLowerCase();
+    const name = learner.emp_name || learner.name || "";
+    const firstName = learner.emp_firstname || learner.firstName || "";
+    const isAssigned = assignedLearners.some(
+      (assigned) =>
+        String(assigned.idEmploye ?? assigned.id) ===
+        String(learner.idEmploye ?? learner.id)
+    );
+    return (
+      !isAssigned &&
+      `${name} ${firstName}`.toLowerCase().includes(search)
+    );
+  });
+
+  const filteredAvailableTrainers = availableTrainers.filter((trainer) => {
+    const search = trainerSearch.toLowerCase();
+    const name = trainer.form_name || "";
+    const firstName = trainer.form_firstname || trainer.form_first_name || "";
+    const isAssigned = assignedTrainers.some(
+      (assigned) =>
+        String(assigned.idFormateur) === String(trainer.idFormateur)
+    );
+    return (
+      !isAssigned &&
+      `${name} ${firstName}`.toLowerCase().includes(search)
+    );
+  });
 
 
   if (loading) {
@@ -331,6 +525,7 @@ const ProjetDetailForm = () => {
           >
             {[
               ["participants", "Participants"],
+              ["formateurs", "Formateurs"],
               ["objectifs", "Objectifs"],
               ["materiels", "Matériels"],
               ["agenda", "Agenda"],
@@ -365,7 +560,7 @@ const ProjetDetailForm = () => {
                         <div className="flex min-w-0 items-center gap-3">
                           <span className="text-xl font-semibold">Participants</span>
                           <span className="px-3 py-1 text-sm font-medium rounded-full bg-white/20">
-                            {projet?.apprs?.length || 0}
+                            {assignedLearners.length}
                           </span>
                         </div>
                         <div className="ml-auto">
@@ -378,6 +573,14 @@ const ProjetDetailForm = () => {
                       </button>
 
                       <div className="flex items-center gap-3 ml-4">
+                        <button
+                          type="button"
+                          onClick={() => setShowLearnerManager(true)}
+                          className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-white px-4 py-2 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-50"
+                        >
+                          <FaPlus className="h-3.5 w-3.5" />
+                          Ajouter un apprenant
+                        </button>
                         <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 rounded-lg bg-white/10 hover:bg-white/20">
                           <FileText className="w-4 h-4" />
                           Émargement
@@ -399,7 +602,7 @@ const ProjetDetailForm = () => {
 
                     {/* Tableau des participants */}
                     <div className="p-6">
-                      {projet?.apprs && projet.apprs.length > 0 ? (
+                      {assignedLearners.length > 0 ? (
                         <div className="space-y-1">
 
                           {/* En-tête du tableau */}
@@ -420,12 +623,12 @@ const ProjetDetailForm = () => {
                               <FaAward className="w-4 h-4" />
                               Compétences
                             </div>
-                            <div className="col-span-1 text-center"></div>
+                            <div className="col-span-1 text-center">Action</div>
                           </div>
 
                           {/* Liste des participants */}
                           <div className="space-y-2">
-                            {projet.apprs.map((participant, index) => (
+                            {assignedLearners.map((participant, index) => (
                               <div
                                 key={index}
                                 className="grid items-center grid-cols-12 gap-4 px-4 py-4 transition-all duration-200 bg-white border border-gray-200 rounded-xl hover:shadow-md hover:border-indigo-200 group"
@@ -514,8 +717,21 @@ const ProjetDetailForm = () => {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="col-span-1 text-center">
-
+                                <div className="col-span-1 flex justify-center">
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      manageLearner(
+                                        "delete",
+                                        participant.idEmploye ?? participant.id
+                                      )
+                                    }
+                                    disabled={learnerManagerLoading}
+                                    aria-label={`Retirer ${participant.emp_name} du projet`}
+                                    className="rounded-lg p-2 text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                  >
+                                    <FaXmark />
+                                  </button>
                                 </div>
                               </div>
                             ))}
@@ -528,6 +744,14 @@ const ProjetDetailForm = () => {
                           </div>
                           <h3 className="mb-3 text-xl font-semibold text-gray-900">Aucun participant</h3>
                           <p className="mb-6 text-gray-500">Cette formation n'a pas encore de participants inscrits</p>
+                          <button
+                            type="button"
+                            onClick={() => setShowLearnerManager(true)}
+                            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white transition hover:bg-indigo-700"
+                          >
+                            <FaPlus />
+                            Ajouter un apprenant
+                          </button>
                         </div>
                       )}
                     </div>
@@ -540,6 +764,91 @@ const ProjetDetailForm = () => {
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div id="formateurs" className="w-full scroll-mt-24 p-4 mx-auto max-w-8xl">
+                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-5">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-xl bg-white p-3 shadow-sm">
+                        <FaUsers className="text-xl text-indigo-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-semibold text-slate-800">
+                          Formateurs
+                        </h2>
+                        <p className="text-sm text-slate-600">
+                          {assignedTrainers.length} formateur(s) assigné(s) au projet
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowTrainerManager(true)}
+                      className="inline-flex items-center gap-2 rounded-xl border-2 border-indigo-600 bg-white px-4 py-2 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-600 hover:text-white"
+                    >
+                      <FaPlus className="h-3.5 w-3.5" />
+                      Ajouter un formateur
+                    </button>
+                  </div>
+                  <div className="p-6">
+                    {assignedTrainers.length > 0 ? (
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {assignedTrainers.map((trainer) => (
+                          <div
+                            key={trainer.idFormateur}
+                            className="flex items-center gap-3 rounded-xl border border-slate-200 p-4"
+                          >
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 font-semibold text-indigo-700">
+                              {trainer.form_photo ? (
+                                <img
+                                  src={`${IMAGE_URL}/img/formateurs/${trainer.form_photo}`}
+                                  alt=""
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                getInitials(
+                                  trainer.form_firstname || trainer.form_first_name,
+                                  trainer.form_name
+                                )
+                              )}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate font-semibold text-slate-800">
+                                {trainer.form_name}
+                              </p>
+                              <p className="truncate text-sm text-slate-500">
+                                {trainer.form_firstname || trainer.form_first_name || trainer.form_email}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => manageTrainer("delete", trainer.idFormateur)}
+                              disabled={trainerManagerLoading}
+                              aria-label={`Retirer ${trainer.form_name} du projet`}
+                              className="rounded-lg p-2 text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                            >
+                              <FaXmark />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-8 text-center">
+                        <p className="mb-4 text-slate-500">
+                          Aucun formateur supplémentaire n’est assigné.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setShowTrainerManager(true)}
+                          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white transition hover:bg-indigo-700"
+                        >
+                          <FaPlus />
+                          Assigner un formateur
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1010,6 +1319,313 @@ const ProjetDetailForm = () => {
           </div>
         </div>
       </div>
+      {showLearnerManager && (
+        <div className="fixed inset-0 z-[100]">
+          <button
+            type="button"
+            aria-label="Fermer la gestion des apprenants"
+            onClick={() => setShowLearnerManager(false)}
+            className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
+          />
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="learner-manager-title"
+            className="absolute inset-y-0 right-0 flex w-full max-w-5xl flex-col bg-white shadow-2xl"
+          >
+            <header className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4">
+              <div>
+                <h2 id="learner-manager-title" className="text-xl font-semibold text-slate-800">
+                  Gérer les apprenants
+                </h2>
+                <p className="text-sm text-slate-600">
+                  Ajouter ou retirer des participants du projet
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowLearnerManager(false)}
+                aria-label="Fermer"
+                className="rounded-lg p-2 text-slate-600 transition hover:bg-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </header>
+            {learnerActionError && (
+              <p role="alert" className="mx-6 mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                {learnerActionError}
+              </p>
+            )}
+            <div className="grid min-h-0 flex-1 md:grid-cols-2">
+              <div className="flex min-h-0 flex-col border-b border-slate-200 md:border-b-0 md:border-r">
+                <div className="space-y-3 border-b border-slate-200 bg-slate-50 p-4">
+                  <h3 className="font-semibold text-slate-700">Apprenants disponibles</h3>
+                  <label className="block text-sm text-slate-600">
+                    Entreprise
+                    <select
+                      value={selectedLearnerCompany}
+                      onChange={(event) => setSelectedLearnerCompany(event.target.value)}
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    >
+                      <option value="">Sélectionner une entreprise</option>
+                      {learnerCompanies.map((company) => (
+                        <option key={company.idEtp} value={company.idEtp}>
+                          {company.etp_name || company.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <input
+                      value={learnerSearch}
+                      onChange={(event) => setLearnerSearch(event.target.value)}
+                      placeholder="Rechercher un apprenant"
+                      className="w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    />
+                  </div>
+                </div>
+                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
+                  {learnerManagerLoading ? (
+                    <p className="py-8 text-center text-sm text-slate-500">Chargement...</p>
+                  ) : filteredAvailableLearners.length > 0 ? (
+                    filteredAvailableLearners.map((learner) => {
+                      const employeeId = learner.idEmploye ?? learner.id;
+                      const firstName = learner.emp_firstname || learner.firstName;
+                      const name = learner.emp_name || learner.name;
+                      return (
+                        <div key={employeeId} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">
+                            {learner.emp_photo || learner.photo ? (
+                              <img
+                                src={`${IMAGE_URL}/img/employes/${learner.emp_photo || learner.photo}`}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              getInitials(firstName, name)
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-medium text-slate-800">{name}</p>
+                            <p className="truncate text-sm text-slate-500">{firstName}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => manageLearner("post", employeeId)}
+                            disabled={learnerManagerLoading}
+                            aria-label={`Ajouter ${name}`}
+                            className="rounded-lg bg-emerald-50 p-2 text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-50"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="py-8 text-center text-sm text-slate-500">
+                      {selectedLearnerCompany
+                        ? "Aucun apprenant disponible."
+                        : "Sélectionnez une entreprise pour afficher ses apprenants."}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex min-h-0 flex-col">
+                <div className="border-b border-slate-200 bg-slate-50 p-4">
+                  <h3 className="font-semibold text-slate-700">
+                    {assignedLearners.length} apprenant(s) assigné(s)
+                  </h3>
+                </div>
+                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
+                  {assignedLearners.length > 0 ? (
+                    assignedLearners.map((learner) => {
+                      const employeeId = learner.idEmploye ?? learner.id;
+                      const firstName = learner.emp_firstname || learner.firstName;
+                      const name = learner.emp_name || learner.name;
+                      return (
+                        <div key={employeeId} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">
+                            {learner.emp_photo || learner.photo ? (
+                              <img
+                                src={`${IMAGE_URL}/img/employes/${learner.emp_photo || learner.photo}`}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              getInitials(firstName, name)
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-medium text-slate-800">{name}</p>
+                            <p className="truncate text-sm text-slate-500">{firstName}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => manageLearner("delete", employeeId)}
+                            disabled={learnerManagerLoading}
+                            aria-label={`Retirer ${name}`}
+                            className="rounded-lg bg-red-50 p-2 text-red-600 transition hover:bg-red-100 disabled:opacity-50"
+                          >
+                            <FaXmark />
+                          </button>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="py-8 text-center text-sm text-slate-500">
+                      Aucun apprenant assigné à ce projet.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+      {showTrainerManager && (
+        <div className="fixed inset-0 z-[100]">
+          <button
+            type="button"
+            aria-label="Fermer la gestion des formateurs"
+            onClick={() => setShowTrainerManager(false)}
+            className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm"
+          />
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="trainer-manager-title"
+            className="absolute inset-y-0 right-0 flex w-full max-w-5xl flex-col bg-white shadow-2xl"
+          >
+            <header className="flex items-center justify-between border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4">
+              <div>
+                <h2 id="trainer-manager-title" className="text-xl font-semibold text-slate-800">
+                  Gérer les formateurs
+                </h2>
+                <p className="text-sm text-slate-600">
+                  Assigner un formateur disponible au projet
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowTrainerManager(false)}
+                aria-label="Fermer"
+                className="rounded-lg p-2 text-slate-600 transition hover:bg-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </header>
+            {trainerActionError && (
+              <p role="alert" className="mx-6 mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                {trainerActionError}
+              </p>
+            )}
+            <div className="grid min-h-0 flex-1 md:grid-cols-2">
+              <div className="flex min-h-0 flex-col border-b border-slate-200 md:border-b-0 md:border-r">
+                <div className="space-y-3 border-b border-slate-200 bg-slate-50 p-4">
+                  <h3 className="font-semibold text-slate-700">Formateurs disponibles</h3>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <input
+                      value={trainerSearch}
+                      onChange={(event) => setTrainerSearch(event.target.value)}
+                      placeholder="Rechercher un formateur"
+                      className="w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    />
+                  </div>
+                </div>
+                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
+                  {trainerManagerLoading ? (
+                    <p className="py-8 text-center text-sm text-slate-500">Chargement...</p>
+                  ) : filteredAvailableTrainers.length > 0 ? (
+                    filteredAvailableTrainers.map((trainer) => {
+                      const firstName = trainer.form_firstname || trainer.form_first_name;
+                      return (
+                        <div key={trainer.idFormateur} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">
+                            {trainer.form_photo ? (
+                              <img
+                                src={`${IMAGE_URL}/img/formateurs/${trainer.form_photo}`}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              getInitials(firstName, trainer.form_name)
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-medium text-slate-800">{trainer.form_name}</p>
+                            <p className="truncate text-sm text-slate-500">{firstName || trainer.form_email}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => manageTrainer("post", trainer.idFormateur)}
+                            disabled={trainerManagerLoading}
+                            aria-label={`Assigner ${trainer.form_name}`}
+                            className="rounded-lg bg-emerald-50 p-2 text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-50"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="py-8 text-center text-sm text-slate-500">
+                      Aucun formateur disponible à ajouter.
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex min-h-0 flex-col">
+                <div className="border-b border-slate-200 bg-slate-50 p-4">
+                  <h3 className="font-semibold text-slate-700">
+                    {assignedTrainers.length} formateur(s) assigné(s)
+                  </h3>
+                </div>
+                <div className="min-h-0 flex-1 space-y-2 overflow-y-auto p-4">
+                  {assignedTrainers.length > 0 ? (
+                    assignedTrainers.map((trainer) => {
+                      const firstName = trainer.form_firstname || trainer.form_first_name;
+                      return (
+                        <div key={trainer.idFormateur} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700">
+                            {trainer.form_photo ? (
+                              <img
+                                src={`${IMAGE_URL}/img/formateurs/${trainer.form_photo}`}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              getInitials(firstName, trainer.form_name)
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-medium text-slate-800">{trainer.form_name}</p>
+                            <p className="truncate text-sm text-slate-500">{firstName || trainer.form_email}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => manageTrainer("delete", trainer.idFormateur)}
+                            disabled={trainerManagerLoading}
+                            aria-label={`Retirer ${trainer.form_name}`}
+                            className="rounded-lg bg-red-50 p-2 text-red-600 transition hover:bg-red-100 disabled:opacity-50"
+                          >
+                            <FaXmark />
+                          </button>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="py-8 text-center text-sm text-slate-500">
+                      Aucun formateur assigné à ce projet.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
     </>
   );
 };
