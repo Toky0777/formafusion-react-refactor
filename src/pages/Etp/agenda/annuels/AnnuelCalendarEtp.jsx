@@ -190,19 +190,18 @@ const AnnuelCalendarEtp = () => {
                         ${DayPilot.Util.escapeHtml(obj.module)}
                         </span>
                         <span class="w-full ml-1 flex flex-col bg-grey-100 items-start italic text-xs rounded-md">
-                        Ref: ${
-                          obj.reference
-                            ? DayPilot.Util.escapeHtml(obj.reference)
-                            : "--"
-                        }
+                        Ref: ${obj.reference
+              ? DayPilot.Util.escapeHtml(obj.reference)
+              : "--"
+            }
                         </span>
                         <span class="px-1 py-1 text-xs bg-white text-slate-600 rounded-md">
                         ${DayPilot.Util.escapeHtml(nameCfp || "--")}
                         </span>
                         <span class="px-1 py-1 text-xs bg-pink-100 text-slate-600 rounded-md">
                         ${DayPilot.Util.escapeHtml(
-                          obj.codePostal
-                        )}:${DayPilot.Util.escapeHtml(obj.ville)}
+              obj.codePostal
+            )}:${DayPilot.Util.escapeHtml(obj.ville)}
                         </span>
                     </div>
           `,
@@ -320,14 +319,12 @@ const AnnuelCalendarEtp = () => {
                               alt="" class="w-full h-auto object-cover">
                         </div>
                         <div class="flex flex-col">
-                          <p class="text-xl font-semibold text-gray-700">${
-                            module || "non assigné"
-                          }
+                          <p class="text-xl font-semibold text-gray-700">${module || "non assigné"
+            }
                           </p>
                           <p class="text-sm text-gray-400">Centre de Formation : <span
-                              class="text-sm text-gray-500"> ${
-                                nameCfp || "----"
-                              } </span> 
+                              class="text-sm text-gray-500"> ${nameCfp || "----"
+            } </span> 
                           </p>
 
                           <p class="text-sm text-gray-400">Projet : <span
@@ -349,9 +346,8 @@ const AnnuelCalendarEtp = () => {
                         <p class="text-sm text-gray-400">Le :</p>
                         </div>
                         <div class="w-[66%] inline-flex items-center justify-start">
-                          <p class="text-base text-gray-500">${
-                            date || "non assigné"
-                          }</p>
+                          <p class="text-base text-gray-500">${date || "non assigné"
+            }</p>
                         </div>
                       </div>
                       <div class="inline-flex items-start gap-x-2">
@@ -359,9 +355,8 @@ const AnnuelCalendarEtp = () => {
                         <p class="text-sm text-gray-400">De :</p>
                         </div>
                         <div class="w-[66%] inline-flex items-center justify-start">
-                          <p class="text-base text-gray-500">${
-                            start || "non assigné"
-                          } à ${end || "non assigné"}</p>
+                          <p class="text-base text-gray-500">${start || "non assigné"
+            } à ${end || "non assigné"}</p>
                         </div>
                       </div>
                       <div class="inline-flex items-start gap-x-2">
@@ -369,9 +364,8 @@ const AnnuelCalendarEtp = () => {
                         <p class="text-sm text-gray-400">Formateur :</p>
                         </div>
                         <div class="w-[66%] inline-flex items-center justify-start">
-                          <p class="text-base text-gray-500">${
-                            tabForm.map((form) => form.prenom) || "non assigné"
-                          }  </p>
+                          <p class="text-base text-gray-500">${tabForm.map((form) => form.prenom) || "non assigné"
+            }  </p>
                         </div>
                       </div>
                       <div class="inline-flex items-start gap-x-2">
@@ -379,9 +373,8 @@ const AnnuelCalendarEtp = () => {
                         <p class="text-sm text-gray-400">Lieu :</p>
                         </div>
                         <div class="w-[66%] inline-flex items-center justify-start">
-                          <p class="text-base text-grayS-500">${
-                            ville || "non assigné"
-                          }</p>
+                          <p class="text-base text-grayS-500">${ville || "non assigné"
+            }</p>
                         </div>
                       </div>
 
@@ -390,9 +383,8 @@ const AnnuelCalendarEtp = () => {
                         <p class="text-sm text-gray-400">Salle :</p>
                         </div>
                         <div class="w-[66%] inline-flex items-center justify-start">
-                          <p class="text-base text-gray-500">${
-                            salle || "non assigné"
-                          }</p>
+                          <p class="text-base text-gray-500">${salle || "non assigné"
+            }</p>
                         </div>  
                       </div>
 
@@ -402,9 +394,8 @@ const AnnuelCalendarEtp = () => {
                         <p class="text-sm text-gray-400">Quartier :</p>
                         </div>
                         <div class="w-[66%] inline-flex items-center justify-start">
-                          <p class="text-base text-gray-500">${
-                            quartier !== null ? quartier : "--"
-                          }</p>
+                          <p class="text-base text-gray-500">${quartier !== null ? quartier : "--"
+            }</p>
                         </div>  
                       </div>
                     </div>
@@ -414,21 +405,16 @@ const AnnuelCalendarEtp = () => {
           // Opportunité
           args.html = `
                     <div class="bg-white p-3 rounded-md shadow-md text-sm">
-                        <h5 class="font-semibold text-indigo-700">${
-                          escape(module) || "Non défini"
-                        }</h5>
-                        <p class="text-indigo-500">Client: ${
-                          escape(nameEtp) || "Non défini"
-                        }</p>
-                        <p class="text-indigo-500">Statut: ${
-                          escape(statut) || "Non défini"
-                        }</p>
-                        <p class="text-indigo-500">Participants: ${
-                          escape(nb_appr) || "Non défini"
-                        }</p>
-                        <p class="text-indigo-500">Date: ${
-                          escape(date) || "Non définie"
-                        }</p>
+                        <h5 class="font-semibold text-indigo-700">${escape(module) || "Non défini"
+            }</h5>
+                        <p class="text-indigo-500">Client: ${escape(nameEtp) || "Non défini"
+            }</p>
+                        <p class="text-indigo-500">Statut: ${escape(statut) || "Non défini"
+            }</p>
+                        <p class="text-indigo-500">Participants: ${escape(nb_appr) || "Non défini"
+            }</p>
+                        <p class="text-indigo-500">Date: ${escape(date) || "Non définie"
+            }</p>
                     </div>`;
         }
       },
@@ -522,7 +508,7 @@ const AnnuelCalendarEtp = () => {
             onClick: (args) => {
               const e = args.source;
               const idProjet = DayPilot.Util.escapeHtml(e.data.idProjet);
-              navigate(`/etp/projets/${idProjet}/detail`);
+              navigate(`/etp/projet/detail/${idProjet}`);
             },
           },
           {
@@ -754,7 +740,7 @@ const AnnuelCalendarEtp = () => {
     { value: currentYear - 1, label: String(currentYear - 1) },
   ];
   return (
-    <div className="relative w-full h-full flex flex-col">
+    <div className="relative flex flex-col w-full h-full">
       {/* En-tête avec titre */}
 
       <Toaster
@@ -766,12 +752,12 @@ const AnnuelCalendarEtp = () => {
         }}
       />
       <div className="flex items-center space-x-1 ">
-        <div className="flex items-center gap-12 justify-between p-1">
+        <div className="flex items-center justify-between gap-12 p-1">
           <div className="flex items-center gap-3">
-            <div className="p-1  rounded-xl shadow-lg"></div>
+            <div className="p-1 shadow-lg rounded-xl"></div>
             <div className="flex flex-col">
-              <h1 className="text-xl  text-gray-700">Agenda</h1>
-              <p className="text-md font-bold text-purple-600">
+              <h1 className="text-xl text-gray-700">Agenda</h1>
+              <p className="font-bold text-purple-600 text-md">
                 {monthName} {annee}
               </p>
             </div>
@@ -780,12 +766,12 @@ const AnnuelCalendarEtp = () => {
             <div className="relative inline-block text-left">
               <button
                 onClick={() => setIsYearOpen(!isYearOpen)}
-                className="inline-flex justify-center rounded-md  shadow-sm px-2 py-1 bg-white/90 border border-gray-200/50  text-gray-500 text-sm font-medium  hover:bg-gray-50 focus:outline-none"
+                className="inline-flex justify-center px-2 py-1 text-sm font-medium text-gray-500 border rounded-md shadow-sm bg-white/90 border-gray-200/50 hover:bg-gray-50 focus:outline-none"
               >
                 {/* Afficher l'année sélectionnée pour plus de clarté */}
                 Annuels
                 <svg
-                  className="-mr-1 ml-2 h-5 w-5"
+                  className="w-5 h-5 ml-2 -mr-1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -798,7 +784,7 @@ const AnnuelCalendarEtp = () => {
                 </svg>
               </button>
               {isYearOpen && (
-                <div className="origin-top-right z-20 absolute mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="absolute z-20 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="py-1">
                     {years.map((year) => (
                       <button
@@ -808,16 +794,15 @@ const AnnuelCalendarEtp = () => {
                           setIsYearOpen(false);
                           setMonthName("");
                         }}
-                        className={`block w-full text-left px-4 py-2 text-sm ${
-                          annee === year.value
+                        className={`block w-full text-left px-4 py-2 text-sm ${annee === year.value
                             ? "bg-blue-100 text-blue-900 font-bold"
                             : "text-gray-700 hover:bg-gray-100"
-                        }`}
+                          }`}
                       >
                         {year.label}
                         {annee === year.value && (
                           <svg
-                            className="ml-10 h-4 w-4 inline-block"
+                            className="inline-block w-4 h-4 ml-10"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
                             fill="currentColor"
@@ -838,11 +823,11 @@ const AnnuelCalendarEtp = () => {
             <div className="relative inline-block text-left">
               <button
                 onClick={() => setIsMonthOpen(!isMonthOpen)}
-                className="inline-flex justify-center rounded-md bg-white/90 border border-gray-200/50 shadow-sm px-2 py-1  text-gray-500 text-sm font-medium  hover:bg-gray-50 focus:outline-none"
+                className="inline-flex justify-center px-2 py-1 text-sm font-medium text-gray-500 border rounded-md shadow-sm bg-white/90 border-gray-200/50 hover:bg-gray-50 focus:outline-none"
               >
                 Mensuels
                 <svg
-                  className="-mr-1 ml-2 h-5 w-5"
+                  className="w-5 h-5 ml-2 -mr-1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -855,8 +840,8 @@ const AnnuelCalendarEtp = () => {
                 </svg>
               </button>
               {isMonthOpen && (
-                <div className="origin-top-right z-20 absolute mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="p-2 max-h-64 overflow-y-auto">
+                <div className="absolute z-20 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="p-2 overflow-y-auto max-h-64">
                     {months.map((month) => (
                       <button
                         key={month.value}
@@ -865,16 +850,15 @@ const AnnuelCalendarEtp = () => {
                           setIsMonthOpen(false);
                           setMonthName(month.label);
                         }}
-                        className={`block w-full text-left px-4 py-2 text-sm ${
-                          moisFiltre === month.value
+                        className={`block w-full text-left px-4 py-2 text-sm ${moisFiltre === month.value
                             ? "bg-blue-100 text-blue-900 font-bold"
                             : "text-gray-700 hover:bg-gray-100"
-                        }`}
+                          }`}
                       >
                         {month.label}
                         {moisFiltre === month.value && (
                           <svg
-                            className="ml-2 h-4 w-4 inline-block"
+                            className="inline-block w-4 h-4 ml-2"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
                             fill="currentColor"
@@ -895,11 +879,11 @@ const AnnuelCalendarEtp = () => {
             <div className="relative inline-block text-left">
               <button
                 onClick={() => setIsWeekOpen(!isWeekOpen)}
-                className="inline-flex justify-center rounded-md bg-white/90 border border-gray-200/50 shadow-sm px-2 py-1   text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none"
+                className="inline-flex justify-center px-2 py-1 text-sm font-medium text-gray-500 border rounded-md shadow-sm bg-white/90 border-gray-200/50 hover:bg-gray-50 focus:outline-none"
               >
                 Semaine
                 <svg
-                  className="-mr-1 ml-2 h-5 w-5"
+                  className="w-5 h-5 ml-2 -mr-1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -912,7 +896,7 @@ const AnnuelCalendarEtp = () => {
                 </svg>
               </button>
               {isWeekOpen && (
-                <div className="origin-top-right z-20 absolute mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="absolute z-20 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="py-1">
                     <button
                       onClick={() => {
@@ -920,16 +904,15 @@ const AnnuelCalendarEtp = () => {
                         setIsWeekOpen(false);
                         setDayVUe("31");
                       }}
-                      className={`block w-full text-left px-4 py-2 text-sm ${
-                        DaySelect === "01"
+                      className={`block w-full text-left px-4 py-2 text-sm ${DaySelect === "01"
                           ? "bg-blue-100 text-blue-900 font-bold"
                           : "text-gray-700 hover:bg-gray-100"
-                      }`}
+                        }`}
                     >
                       01 - 07
                       {DaySelect === "01" && (
                         <svg
-                          className="ml-2 h-4 w-4 inline-block"
+                          className="inline-block w-4 h-4 ml-2"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 20 20"
                           fill="currentColor"
@@ -948,16 +931,15 @@ const AnnuelCalendarEtp = () => {
                         setIsWeekOpen(false);
                         setDayVUe("24");
                       }}
-                      className={`block w-full text-left px-4 py-2 text-sm ${
-                        DaySelect === "08"
+                      className={`block w-full text-left px-4 py-2 text-sm ${DaySelect === "08"
                           ? "bg-blue-100 text-blue-900 font-bold"
                           : "text-gray-700 hover:bg-gray-100"
-                      }`}
+                        }`}
                     >
                       08 - 15
                       {DaySelect === "08" && (
                         <svg
-                          className="ml-2 h-4 w-4 inline-block"
+                          className="inline-block w-4 h-4 ml-2"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 20 20"
                           fill="currentColor"
@@ -976,16 +958,15 @@ const AnnuelCalendarEtp = () => {
                         setIsWeekOpen(false);
                         setDayVUe("17");
                       }}
-                      className={`block w-full text-left px-4 py-2 text-sm ${
-                        DaySelect === "15"
+                      className={`block w-full text-left px-4 py-2 text-sm ${DaySelect === "15"
                           ? "bg-blue-100 text-blue-900 font-bold"
                           : "text-gray-700 hover:bg-gray-100"
-                      }`}
+                        }`}
                     >
                       15 - 22
                       {DaySelect === "15" && (
                         <svg
-                          className="ml-2 h-4 w-4 inline-block"
+                          className="inline-block w-4 h-4 ml-2"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 20 20"
                           fill="currentColor"
@@ -1011,7 +992,7 @@ const AnnuelCalendarEtp = () => {
                   setDayVUe("31");
                 }}
                 title="clear"
-                className="inline-flex justify-center rounded-md bg-white/90 border border-gray-200/50 shadow-sm px-2 py-1   text-sm font-medium text-gray-500 hover:bg-gray-50 focus:outline-none"
+                className="inline-flex justify-center px-2 py-1 text-sm font-medium text-gray-500 border rounded-md shadow-sm bg-white/90 border-gray-200/50 hover:bg-gray-50 focus:outline-none"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Réinitialiser
@@ -1021,17 +1002,17 @@ const AnnuelCalendarEtp = () => {
         </div>
       </div>
       {/* Barre de contrôles modernisée */}
-      <div className=" p-1 mb-1 transition-all duration-300 hover:shadow-2xl animate-slide-up">
+      <div className="p-1 mb-1 transition-all duration-300  hover:shadow-2xl animate-slide-up">
         <div className="flex flex-wrap items-center justify-between gap-6">
           {/* Section gauche - Filtres principaux */}
           <div className="flex flex-wrap items-center gap-4">
-            <div className="relative flex items-center bg-white rounded shadow border border-gray-100 transition-all duration-200 hover:shadow-xl focus-within:ring-2 focus-within:ring-blue-500/20">
-              <Search className="absolute right-2 h-4 w-4 text-gray-400" />
+            <div className="relative flex items-center transition-all duration-200 bg-white border border-gray-100 rounded shadow hover:shadow-xl focus-within:ring-2 focus-within:ring-blue-500/20">
+              <Search className="absolute w-4 h-4 text-gray-400 right-2" />
               <input
                 type="text"
                 placeholder="Rechercher un module..."
                 onChange={(ev) => applyFilterModule(ev.currentTarget.value)}
-                className="pl-6 pr-2  rounded-xl p-1 border-none focus:outline-none bg-transparent text-gray-800 placeholder-gray-400 w-64"
+                className="w-64 p-1 pl-6 pr-2 text-gray-800 placeholder-gray-400 bg-transparent border-none rounded-xl focus:outline-none"
               />
             </div>
           </div>
@@ -1040,7 +1021,7 @@ const AnnuelCalendarEtp = () => {
           <div className="flex flex-wrap items-center gap-4">
             {/* Barre de recherche améliorée */}
 
-            <div className="flex flex-wrap items-center gap-1 bg-white pl-1 pr-1 p-1/2 rounded">
+            <div className="flex flex-wrap items-center gap-1 pl-1 pr-1 bg-white rounded p-1/2">
               <input
                 type="range"
                 min="10"
@@ -1068,10 +1049,10 @@ const AnnuelCalendarEtp = () => {
 
         {/* Indicateur de chargement amélioré */}
         {loading && (
-          <div className="absolute inset-0 bg-white/20 backdrop-blur-none flex items-start justify-center z-10 rounded-2xl p-10">
+          <div className="absolute inset-0 z-10 flex items-start justify-center p-10 bg-white/20 backdrop-blur-none rounded-2xl">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
-                <LoaderCircle className="w-6 h-6 mx-auto animate-spin text-purple-500 border-purple-500" />
+                <LoaderCircle className="w-6 h-6 mx-auto text-purple-500 border-purple-500 animate-spin" />
               </div>
             </div>
           </div>
