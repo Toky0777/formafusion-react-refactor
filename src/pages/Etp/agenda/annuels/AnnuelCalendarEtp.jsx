@@ -114,6 +114,11 @@ const AnnuelCalendarEtp = () => {
         const dpStart = new DayPilot.Date(obj.start);
 
         const dpEnd = new DayPilot.Date(obj.end);
+        const nameCfp = Array.isArray(obj.nameCfp)
+          ? obj.nameCfp[0]?.etp_name
+          : typeof obj.nameCfp === "object"
+            ? obj.nameCfp?.etp_name
+            : obj.nameCfp;
         const month = dpStart.getMonth() + 1;
         const dayStart = dpStart.getDay();
         const dayEnd = dpEnd.getDay();
@@ -149,8 +154,8 @@ const AnnuelCalendarEtp = () => {
           imgModule: obj.imgModule,
           module: obj.module,
           nameEtp: obj.nameEtp,
-          nameEtps: obj.nameEtps ? [...obj.nameEtps] : [],
-          nameCfp: obj.nameCfp[0].etp_name,
+          nameEtps: Array.isArray(obj.nameEtps) ? [...obj.nameEtps] : [],
+          nameCfp: nameCfp || "",
           statut: obj.statut,
           nb_appr: obj.nb_appr,
           height: 125,
@@ -160,7 +165,7 @@ const AnnuelCalendarEtp = () => {
 
           salle: obj.salle,
           paiement: obj.paiement,
-          prenom_form: obj.formateurs.map((formateur) => {
+          prenom_form: (Array.isArray(obj.formateurs) ? obj.formateurs : []).map((formateur) => {
             let idForm = formateur.idFormateur;
             let prenom_form = formateur.form_firstname;
             let email = formateur.email;
@@ -192,7 +197,7 @@ const AnnuelCalendarEtp = () => {
                         }
                         </span>
                         <span class="px-1 py-1 text-xs bg-white text-slate-600 rounded-md">
-                        ${DayPilot.Util.escapeHtml(obj.nameCfp[0].etp_name)}
+                        ${DayPilot.Util.escapeHtml(nameCfp || "--")}
                         </span>
                         <span class="px-1 py-1 text-xs bg-pink-100 text-slate-600 rounded-md">
                         ${DayPilot.Util.escapeHtml(
